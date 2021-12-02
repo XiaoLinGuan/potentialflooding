@@ -97,7 +97,8 @@ content = dbc.Container([
 							2050: "2050"
 						},
 						value=2020,
-						included=False)
+						included=False),
+					dcc.Graph(id = "map")
 				])
 			], style = {"border": "2px solid #99e6b3"})
 		],width=6),
@@ -136,7 +137,8 @@ content = dbc.Container([
 							options=[
 								{"label": "Global", "value": "global_sl"},
 								{"label": "East Coast", "value": "east_coast_sl"},
-								{"label": "NYC", "value": "nyc_sl"}
+								{"label": "NYC", "value": "nyc_sl"},
+								{"label": "All Three Regions", "value": "all_sl"}
 							],
 							value = "global_sl",
 							inline = True,
@@ -198,6 +200,18 @@ content = dbc.Container([
 	])
 ])
 
+# Build the Map
+@app.callback(Output(component_id="map", component_property="figure"),
+				[Input(component_id="slider", component_property="value"),])
+
+def build_map(year):
+	fig = px.choropleth(
+		locations=["NY"],
+		locationmode = "USA-states",
+		scope = "usa"
+	)
+	return fig
+
 # Show or hide line graph options
 @app.callback(Output(component_id="sea_level_options", component_property="style"),
 				Input(component_id="line_graph_dropdown", component_property="value"))
@@ -214,34 +228,51 @@ def show_or_hide_line_graph(value):
 	if value != "sea_level":
 		return {"display": "none"}
 
-# Building the line graph.
+# Build the line graph.
 @app.callback(Output(component_id="line_graph", component_property="figure"),
 				[Input(component_id="line_graph_radioitems_region", component_property="value"),
 				Input(component_id="line_graph_radioitems_measurement", component_property="value")])
 
 def build_line_graph(region, measurement):
-	if (region == "global_sl" and measurement == "measure_inch"):
+	if region == "global_sl":
+		if measurement == "measure_inch":
+			y = "Inch"
+		elif measurement == "measure_cm":
+			y = "Centimeter"
 		data = datasets.global_sl
-		y = "Inch"
-	elif (region == "global_sl" and measurement == "measure_cm"):
-		data = datasets.global_sl
-		y = "Centimeters"
+		title = "Relative Sea Level Rise in Global Scale"
+	elif region == "east_coast_sl":
+		if measurement == "measure_inch":
+			y = "Inch"
+		elif measurement == "measure_cm":
+			y = "Centimeter"
+		data = datasets.ec_sl
+		title = "Relative Sea Level Rise in East Coast"
+	elif region == "nyc_sl":
+		if measurement == "measure_inch":
+			y = "Inch"
+		elif measurement == "measure_cm":
+			y = "Centimeter"
+		data = datasets.nyc_sl
+		title = "Relative Sea Level Rise in NYC Region"
+	elif region == "all_sl":
+		if measurement == "measure_inch":
+			y = "Inch"
+		elif measurement == "measure_cm":
+			y = "Centimeter"
+		data = datasets.all_sl
+		title = "Relative Sea Level Rise in All Three Regions"
+	color = "Region"
 	fig = px.scatter(
 		data, 
 		x = "Year",
 		y = y,
+		color = color,
 		trendline = "lowess",
-		trendline_options=dict(frac=0.1)
+		trendline_options=dict(frac=0.1),
+		title = title
 	)
 	return fig
-	# elif (region == "east_coast_sl" & measurement == "measure_inch"):
-	
-	# elif (region == "east_coast_sl" & measurement == "measure_cm"):
-	
-	# elif (region == "nyc_sl" & measurement == "measure_inch"):
-	
-	# elif (region == "nyc_sl" & measurement == "measure_cm"):
-
 
 # Show or hide scatter plot options
 @app.callback(Output(component_id="cyclone_options", component_property="style"),
@@ -259,7 +290,7 @@ def show_or_hide_scatter_plot(value):
 	if value != "cyclones":
 		return {"display": "none"}
 
-# Matching the color of the legend description to the legend.
+# Match the color of the legend description to the legend.
 @app.callback([Output(component_id="hu", component_property="style"),
 				Output(component_id="ts", component_property="style"),
 				Output(component_id="td", component_property="style")],
@@ -276,7 +307,7 @@ def match_ts_color(value):
 																			"text-decoration-color": "#000000",
 																			"text-decoration-thickness": "2px"}
 		
-# Building the scatter plot.
+# Build the scatter plot.
 @app.callback(Output(component_id="scatter_plot", component_property="figure"),
 				Input(component_id="scatter_plot_radioitems", component_property="value"))
 
