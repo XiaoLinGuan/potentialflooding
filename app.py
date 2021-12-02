@@ -5,10 +5,8 @@ from dash import dash_table
 from dash.dash_table.Format import Group
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-import pandas as pd
 import plotly.express as px
 import datasets
-import statsmodels.api as sm
 
 app = dash.Dash(
 	external_stylesheets=[dbc.themes.FLATLY]
@@ -42,17 +40,6 @@ stacked_barchart = html.Div([
 ])
 
 """
-Bottom Left
-Line Graph
-Global Sea Level current trend and future trend
-East-Coast sea current trend and future trend
-NYC area current trend and future trend
-"""
-line_graph = html.Div([
-
-])
-
-"""
 Top Left
 Map Graph
 Prediction of areas affected by flooding
@@ -74,8 +61,6 @@ pie_chart = html.Div([
 
 bar_button_styles = {"border": "2px solid #aaf0d1"}
 
-line_button_styles = {"border": "2px solid #a0d6b4"}
-
 pie_button_styles = {"border": "2px solid #66ddaa"}
 
 content = dbc.Container([
@@ -85,7 +70,6 @@ content = dbc.Container([
 				dbc.CardBody([
 					html.H4("Map"),
 					dcc.Slider(
-						id = "slider", 
 						min=2010, 
 						max=2050, 
 						step=None,
@@ -97,10 +81,11 @@ content = dbc.Container([
 							2050: "2050"
 						},
 						value=2020,
-						included=False),
-					dcc.Graph(id = "map")
+						included=False,
+						id="slider"), 
+					dcc.Graph(id="map")
 				])
-			], style = {"border": "2px solid #99e6b3"})
+			], style={"border": "2px solid #99e6b3"})
 		],width=6),
 		dbc.Col([
 			dbc.Card([
@@ -111,9 +96,9 @@ content = dbc.Container([
 					dbc.Button("2030", id="bar_2030", outline=True, color="info", class_name="me-1", style=bar_button_styles),
 					dbc.Button("2040", id="bar_2040", outline=True, color="info", class_name="me-1", style=bar_button_styles),
 					dbc.Button("2050", id="bar_2050", outline=True, color="info", class_name="me-1", style=bar_button_styles),
-					dcc.Graph(id = "stacked_bar_chart")
+					dcc.Graph(id="stacked_bar_chart")
 				])
-			],style = {"border": "2px solid #aaf0d1"})
+			],style={"border": "2px solid #aaf0d1"})
 		],width=6)
 	]),
 	html.Br(),
@@ -123,13 +108,13 @@ content = dbc.Container([
 				dbc.CardBody([
 					html.H4("Line Graph/Scatter Plot"),
 					dbc.Select(
-						id = "line_graph_dropdown",
 						options=[
 							{"label": "Sea Level Pattern", "value": "sea_level"},
 							{"label": "Cyclone Count", "value": "cyclones"}
 						],
-						value = "sea_level",
-						style=line_button_styles
+						value="sea_level",
+						style={"border": "2px solid #a0d6b4"},
+						id="line_graph_dropdown"
 					),
 					html.Br(),
 					html.Div([
@@ -140,9 +125,9 @@ content = dbc.Container([
 								{"label": "NYC", "value": "nyc_sl"},
 								{"label": "All Three Regions", "value": "all_sl"}
 							],
-							value = "global_sl",
-							inline = True,
-							id = "line_graph_radioitems_region"
+							value="global_sl",
+							inline=True,
+							id="line_graph_radioitems_region"
 						),
 						html.Hr(style={"border-top": "2px dashed #a0d6b4"}),
 						dbc.RadioItems(
@@ -150,14 +135,14 @@ content = dbc.Container([
 								{"label": "inch", "value": "measure_inch"},
 								{"label": "cm", "value": "measure_cm"}
 							], 
-							value = "measure_inch",
-							inline = True,
-							id = "line_graph_radioitems_measurement"
+							value="measure_inch",
+							inline=True,
+							id="line_graph_radioitems_measurement"
 						)
-					], id = "sea_level_options"),
+					], id="sea_level_options"),
 					html.Div([
 						dcc.Graph(id="line_graph")
-					], id = "sl_graph"),
+					], id="sl_graph"),
 					html.Div([
 						dbc.RadioItems(
 							options=[
@@ -165,9 +150,9 @@ content = dbc.Container([
 								{"label": "East Coast Landfalls", "value": "ec_c"},
 								{"label": "Tri-State Landfalls/Affected NYC", "value": "tri_state_c"}
 							],
-							value = "ao_c",
-							inline = True,
-							id = "scatter_plot_radioitems"
+							value="ao_c",
+							inline=True,
+							id="scatter_plot_radioitems"
 						),
 						html.Br(),
 						dbc.ListGroup([
@@ -175,12 +160,12 @@ content = dbc.Container([
 							dbc.ListGroupItem("TS-Tropical Storm", id="ts"),
 							dbc.ListGroupItem("TD-Tropical Depression", id="td")
 						],horizontal=True)
-					], id = "cyclone_options"),
+					], id="cyclone_options"),
 					html.Div([
 						dcc.Graph(id="scatter_plot")
-					], id = "c_plot")
+					], id="c_plot")
 				])
-			], style = {"border": "2px solid #a0d6b4"})
+			], style={"border": "2px solid #a0d6b4"})
 		],width=6),
 		dbc.Col([
 			dbc.Card([
@@ -192,10 +177,19 @@ content = dbc.Container([
 						dbc.Button("2030", id="pie_2030", outline=True, color="info", class_name="me-1", style=pie_button_styles),
 						dbc.Button("2040", id="pie_2040", outline=True, color="info", class_name="me-1", style=pie_button_styles),
 						dbc.Button("2050", id="pie_2050", outline=True, color="info", class_name="me-1", style=pie_button_styles)
-					],id = "pie_options"),
-					dcc.Graph(id = "pie_chart")
+					], id="pie_options"),
+					dbc.Checklist(
+						options=[
+							{"label": "Donut Chart", "value": "donut"}
+						],
+						value=[],
+						inline=True,
+						switch=True,
+						id="pie_chart_switch"
+					),
+					dcc.Graph(id="pie_chart")
 				])
-			],style = {"border": "2px solid #66ddaa"})
+			],style={"border": "2px solid #66ddaa"})
 		],width=6)
 	])
 ])
@@ -208,7 +202,18 @@ def build_map(year):
 	fig = px.choropleth(
 		locations=["NY"],
 		locationmode = "USA-states",
-		scope = "usa"
+		scope = "usa",
+		title = "Work In Progress"
+	)
+	return fig
+
+# Build the Stacked Bar Chart
+@app.callback(Output(component_id="stacked_bar_chart", component_property="figure"),
+				Input(component_id="bar_2010", component_property="value"))
+
+def build_stacked_bar_chart(value):
+	fig = px.bar(
+		title = "Work In Progress"
 	)
 	return fig
 
@@ -262,14 +267,12 @@ def build_line_graph(region, measurement):
 			y = "Centimeter"
 		data = datasets.all_sl
 		title = "Relative Sea Level Rise in All Three Regions"
-	color = "Region"
-	fig = px.scatter(
+	fig = px.line(
 		data, 
 		x = "Year",
 		y = y,
-		color = color,
-		trendline = "lowess",
-		trendline_options=dict(frac=0.1),
+		color = "Region",
+		symbol = "Region",
 		title = title
 	)
 	return fig
@@ -329,6 +332,16 @@ def build_scatter_plot(value):
 		symbol = "Category",
 		size = "Count",
 		title = title
+	)
+	return fig
+
+# Build the pie chart.
+@app.callback(Output(component_id="pie_chart", component_property="figure"),
+				Input(component_id="pie_2010", component_property="value"))
+
+def build_pie_chart(value):
+	fig = px.pie(
+		title = "Work in Progress"
 	)
 	return fig
 
