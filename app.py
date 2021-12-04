@@ -455,9 +455,9 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 				html.Tr([
 					html.Td([			
 						html.H6("Apply filter on numbers:"),
-						html.Li(html.H6(["Example 1: Enter ", html.Code("=2010")])),
-						html.Li(html.H6(["Example 2: Enter ", html.Code(">=2060")])),
-						html.Li(html.H6(["Example 3: Enter ", html.Code("<43.26")]))
+						html.H6(html.Li(["Example 1: Enter ", html.Code("=2010")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code(">=2060")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("<43.26")]))
 					]),
 					html.Td([
 						html.H6("Apply filter on strings:"),
