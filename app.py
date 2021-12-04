@@ -444,8 +444,8 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 			data = datasets.all_sl
 		filter_example = html.Div([
 			html.H6(html.U("The dataset will change depending on the region the user chooses at the top of the graph.")),
-			html.Li(
-				html.H6([
+			html.H6(
+				html.Li([
 					html.U(["For example, if the user chooses ", html.Code("NYC"), """ at the top of the graph,
 					then the dataset """, html.B("will not"), """ show any regions other than NYC. In this case, if 
 					we apply a filter such as """, html.Code("Global"), " to the dataset, it ", html.B("will not"),
@@ -461,9 +461,9 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 					]),
 					html.Td([
 						html.H6("Apply filter on strings:"),
-						html.Li(html.H6(["Example 1: Enter ", html.Code("Global")])),
-						html.Li(html.H6(["Example 2: Enter ", html.Code("=NYC")])),
-						html.Li(html.H6(["Example 3: Enter ", html.Code("contains East Coast")]))
+						html.H6(html.Li(["Example 1: Enter ", html.Code("Global")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code("=NYC")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("contains East Coast")]))
 					])
 				])
 			])
@@ -607,15 +607,15 @@ def shor_or_hide_sp_dataset(option_show_or_hide, region):
 				html.Tr([
 					html.Td([			
 						html.H6("Apply filter on numbers:"),
-						html.Li(html.H6(["Example 1: Enter ", html.Code("=2010")])),
-						html.Li(html.H6(["Example 2: Enter ", html.Code(">=2060")])),
-						html.Li(html.H6(["Example 3: Enter ", html.Code("<43.26")]))
+						html.H6(html.Li(["Example 1: Enter ", html.Code("=2010")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code(">=2060")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("<43.26")]))
 					]),
 					html.Td([
 						html.H6("Apply filter on strings:"),
-						html.Li(html.H6(["Example 1: Enter ", html.Code("TD")])),
-						html.Li(html.H6(["Example 2: Enter ", html.Code("=HU")])),
-						html.Li(html.H6(["Example 3: Enter ", html.Code("contains TS")]))
+						html.H6(html.Li(["Example 1: Enter ", html.Code("TD")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code("=HU")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("contains TS")]))
 					])
 				])
 				])
