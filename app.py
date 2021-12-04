@@ -534,7 +534,7 @@ def build_scatter_plot(value):
 		trendline = "ols",
 		trendline_scope = "overall",
 		trendline_color_override = "#3C0046",
-		title = title,
+		title = title
 	)
 	fig.update_layout(paper_bgcolor="#DDF2D1", plot_bgcolor="#BEE3BA")
 	return fig
