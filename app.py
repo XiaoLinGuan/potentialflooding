@@ -28,6 +28,11 @@ selected_tab_style = {
 	"font-size": "120"
 }
 
+overview_content_style = {
+	"margin-left": "10px", 
+	"margin-right": "10px"
+}
+
 lg_data_download_button_style = {
 	"border": "1px solid #174978", 
 	"borderRadius": "15px"
@@ -43,7 +48,7 @@ Title of the dashboard
 """
 title = html.Div([
 	html.H1(
-		["Potential Flooding of NYC as Sea Level rises"],
+		["Potential Coastal Flooding of NYC as Sea Level rises"],
 		style = {
 			"height": "50px",
 			"font-size": "40px",
@@ -59,49 +64,60 @@ bar_button_styles = {"border": "2px solid #aaf0d1"}
 
 pie_button_styles = {"border": "2px solid #66ddaa"}
 
-
 """
 Tab1
 Overview content
 Descriprtion of the web app and data sources
 """
 tab1 = html.Div([
-	html.H4("Overview, will be available soon.")
+	html.H4("CSCI39542 Intro to Data Science Project"),
+	html.H3(""),
+
+	# Image link of Sandy
+	# Image link of Ida
+	
+	# Brief description of Line Graph
+	# and explain how the data is obtained and processed
+	html.H5("Line Graph", style={"color": "#174978"}),
+
+	# Brief description of Scatter Plot
+	# and explain how the data is obtained and processed
+	html.H5("Scatter Plot", style={"color": "#405A45"}),
+
+	# Brief description of Choropleth Map
+	# and explain how the data is obtained and processed
+	html.H5("Choropleth Map", style={"color": ""}),
+
+	# Brief description of Bar Chart
+	# and explain how the data is obtained and processed
+	html.H5("Bar Chart", style={"color": ""}),
+
+	# Data sources
+	html.H5("Original Data Sources:"),
+	# html.H6(html.Ul(html.A(html.H6("sea level rise", style={"color": "purple"}), href="https://dash.plotly.com/dash-html-components/img", target="_blank"),)),
+
+	# Link to GitHub Source Code Page
+	html.H6(html.A("GitHub Source Code Page", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank")),
+
+	# Contact Information
+	html.Div([
+		html.H6(html.B("Get in touch"), style={"color": ""}),
+		html.H6("Feel free to reach out for any improvements that I can work on for this project."),
+		html.Address([
+			"Gmail address: ", html.A("xiaolinggguan@gmail.com", href="mailto:xiaolinggguan@gmail.com", target="_blank"),
+			html.Br(),
+			"Email address: ", html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
+		])
+	])
 ], id="overview_tab_content")
 
 """
 Tab2
-Choropleth Map content
-"""
-tab2 = html.Div([
-	html.H4("will be available by the end of Monday or Tuesday"),
-	# Map options
-	dcc.Slider(
-	min=2010, 
-	max=2050, 
-	step=None,
-	marks={
-		2010: "2010",
-		2020: "2020",
-		2030: "2030",
-		2040: "2040",
-		2050: "2050"
-	},
-	value=2020,
-	included=False,
-	id="slider"),
-
-	# Map 
-	dcc.Graph(id="map")
-])
-
-"""
-Tab3
 Line Graph content and Scatter Plot content
 Line Graph will be showing sea-level rise trend
 Scatter Plot will be showing tropical cyclones pattern
 """
-tab3 = html.Div([
+tab2 = html.Div([
 
 	# Line Graph content
 	html.Div([
@@ -118,7 +134,7 @@ tab3 = html.Div([
 			at high risk of constant flooding. By comparing the relative sea-level
 			rise on a global scale and in NYC, NYC has a higher chance of experiencing
 			a more drastic sea-level increase. Even when we compare NYC's mean 
-			sea-level rise to the data of the East Coast,NYC will still take the
+			sea-level rise to the data of the East Coast, NYC will still take the
 			lead in experiencing an acceleration of sea-level rise. 
 			"""
 		], style={"color": "#174978", "text-align": "justify", "margin-left": "10px", "margin-right": "10px"}),
@@ -198,9 +214,8 @@ tab3 = html.Div([
 					html.B("Overview"), 
 					""", 
 					scroll to the bottom of the page, and click on any links under Data 
-					Sources. To get the exact result or similar result of the graphs, 
-					please follow the instructions on downloading the correct data. 
-					Sorry for the inconvenience.
+					Sources. To get the exact result or similar graphs, please follow the 
+					instructions on downloading the correct data. Sorry for the inconvenience.
 					"""
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
@@ -295,9 +310,8 @@ tab3 = html.Div([
 					html.B("Overview"), 
 					""", 
 					scroll to the bottom of the page, and click on any links under Data 
-					Sources. To get the exact result or similar result of the graphs, 
-					please follow the instructions on downloading the correct data. 
-					Sorry for the inconvenience.
+					Sources. To get the exact result or similar graphs, please follow the 
+					instructions on downloading the correct data. Sorry for the inconvenience.
 					"""
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
@@ -307,10 +321,30 @@ tab3 = html.Div([
 ])
 
 """
-Tab4
-Bar Chart content and Pie Chart content
+Tab3
+Choropleth Map content and Bar Chart content
 """
-tab4 = html.Div([
+tab3 = html.Div([
+	html.H4("will be available by the end of Monday or Tuesday"),
+	# Map options
+	dcc.Slider(
+	min=2010, 
+	max=2050, 
+	step=None,
+	marks={
+		2010: "2010",
+		2020: "2020",
+		2030: "2030",
+		2040: "2040",
+		2050: "2050"
+	},
+	value=2020,
+	included=False,
+	id="slider"),
+
+	# Map 
+	dcc.Graph(id="map"),
+
 	html.H4("Stacked Barchart"),
 
 	# Bar chart options
@@ -320,56 +354,19 @@ tab4 = html.Div([
 	dbc.Button("2040", id="bar_2040", outline=True, color="info", class_name="me-1", style=bar_button_styles),
 	dbc.Button("2050", id="bar_2050", outline=True, color="info", class_name="me-1", style=bar_button_styles),
 	dcc.Graph(id="stacked_bar_chart"),
-	html.H4("Pie Chart/Donut Chart"),
-
-	# Pie chart options
-	html.Div(children=[
-		dbc.Button("2010", id="pie_2010", outline=True, color="info", class_name="me-1", style=pie_button_styles),
-		dbc.Button("2020", id="pie_2020", outline=True, color="info", class_name="me-1", style=pie_button_styles),
-		dbc.Button("2030", id="pie_2030", outline=True, color="info", class_name="me-1", style=pie_button_styles),
-		dbc.Button("2040", id="pie_2040", outline=True, color="info", class_name="me-1", style=pie_button_styles),
-		dbc.Button("2050", id="pie_2050", outline=True, color="info", class_name="me-1", style=pie_button_styles)
-	], id="pie_options"),
-	dbc.Checklist(
-		options=[
-			{"label": "Donut Chart", "value": "donut"}
-		],
-		value=[],
-		inline=True,
-		switch=True,
-		id="pie_chart_switch"
-	),
-
-	# Pie Chart
-	dcc.Graph(id="pie_chart")
 ])
 
 # All the tabs
 tabs = html.Div([
 	dcc.Tabs([ 
 			dcc.Tab(tab1, label="Overview", value="tab_1", style=tab_style, selected_style=selected_tab_style),			
-			dcc.Tab(tab2, label="Choropleth Map", value="tab_2", style=tab_style,  selected_style=selected_tab_style),
-			dcc.Tab(tab3, label="Line Graph and Scatter Plot", value="tab_3", style=tab_style, selected_style=selected_tab_style),
-			dcc.Tab(tab4, label="Bar Chart and Pie Chart", value="tab_4", style=tab_style, selected_style=selected_tab_style),
+			dcc.Tab(tab2, label="Line Graph and Scatter Plot", value="tab_2", style=tab_style, selected_style=selected_tab_style),
+			dcc.Tab(tab3, label="Choropleth Map and Bar Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style)
 		],
 		value="tab_1", # Default tab is Overview 
 		id="tabs"
 	)
 ], style={"margin-left": "10px", "margin-right": "10px"})
-
-# Build the Map
-@app.callback(
-	Output(component_id="map", component_property="figure"),
-	[Input(component_id="slider", component_property="value"),])
-
-def build_map(year):
-	fig = px.choropleth(
-		locations=["NY"],
-		locationmode = "USA-states",
-		scope = "usa",
-		title = "Work In Progress"
-	)
-	return fig
 
 """
 Line Graph functions
@@ -457,7 +454,7 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 						html.H6("Apply filter on numbers:"),
 						html.H6(html.Li(["Example 1: Enter ", html.Code("=2010")])),
 						html.H6(html.Li(["Example 2: Enter ", html.Code(">=2060")])),
-						html.H6(html.Li(["Example 3: Enter ", html.Code("<43.26")]))
+						html.Li(html.H6(["Example 3: Enter ", html.Code("<43.26")]))
 					]),
 					html.Td([
 						html.H6("Apply filter on strings:"),
@@ -533,7 +530,7 @@ def build_scatter_plot(value):
 		size = "Count",
 		trendline = "ols",
 		trendline_scope = "overall",
-		trendline_color_override = "#3C0046",
+		trendline_color_override = "#6C3483"
 		title = title
 	)
 	fig.update_layout(paper_bgcolor="#DDF2D1", plot_bgcolor="#BEE3BA")
@@ -649,6 +646,20 @@ def download_line_graph_dataset(ao_button_click, ec_button_click, ts_and_nyc_but
 		return dcc.send_data_frame((datasets.tri_state_and_nyc).to_csv, "tri_state_and_nyc_landfall_count.csv")
 """End of Scatter Plot functions"""
 
+# Build the Map
+@app.callback(
+	Output(component_id="map", component_property="figure"),
+	[Input(component_id="slider", component_property="value"),])
+
+def build_map(year):
+	fig = px.choropleth(
+		locations=["NY"],
+		locationmode = "USA-states",
+		scope = "usa",
+		title = "Work In Progress"
+	)
+	return fig
+
 # Build the Stacked Bar Chart
 @app.callback(
 	Output(component_id="stacked_bar_chart", component_property="figure"),
@@ -657,17 +668,6 @@ def download_line_graph_dataset(ao_button_click, ec_button_click, ts_and_nyc_but
 def build_stacked_bar_chart(value):
 	fig = px.bar(
 		title = "Work In Progress"
-	)
-	return fig
-
-# Build the pie chart.
-@app.callback(
-	Output(component_id="pie_chart", component_property="figure"),
-	Input(component_id="pie_2010", component_property="value"))
-
-def build_pie_chart(value):
-	fig = px.pie(
-		title = "Work in Progress"
 	)
 	return fig
 
