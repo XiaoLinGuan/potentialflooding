@@ -1,6 +1,8 @@
+"""
+Read all the datasets needed for the Web App
+"""
 import pandas as pd
 
-# Read all the datasets needed for the Web App
 
 # Line Graph
 global_sea_level = pd.read_csv("global_sea_level.csv")
