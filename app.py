@@ -99,21 +99,32 @@ tab1 = html.Div([
 	# Data sources
 	html.H5("Original Data Sources:", style={"margin-left": "5px"}),
 	# html.H6(html.Ul(html.A(html.H6("sea level rise", style={"color": "purple"}), href="https://dash.plotly.com/dash-html-components/img", target="_blank"),)),
+	# https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r00/access/csv/ (Choose ibtracs.NA.list.v04r00.csv)
+	html.H5("😂📉Just testing if copying an emoji directly to my web app will work"),
 
 	# Link to GitHub Source Code Page
 	html.H6(html.A("GitHub Source Code Page", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank"),
 		style={"margin-left": "5px"}),
+
+	html.Hr(style={"border": "1px dashed white"}),
 
 	# Contact Information
 	html.Div([
 		html.H6(html.B("Get in touch"), style={"color": ""}),
 		html.H6("Feel free to reach out for any improvements that I can work on for this project."),
 		html.Address([
-			"Gmail address: ", html.A("xiaolinggguan@gmail.com", href="mailto:xiaolinggguan@gmail.com", target="_blank"),
+			"Gmail address: ", 
+			html.A("xiaolinggguan@gmail.com", href="mailto:xiaolinggguan@gmail.com", target="_blank"),
 			html.Br(),
-			"Email address: ", html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
-		])
-	], style={"margin-left": "5px"})
+			"Email address: ", 
+			html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
+		]),
+	], style={"margin-left": "5px", "margin-right": "100px"}),
+
+	# Copyright content
+	# html.Hr(style={"border": "1px dashed white"}),
+	# html.Footer(html.Small("©2021 Xiao Lin Guan. All Rights Reserved"))
+
 ], id="overview_tab_content", style=overview_content_style)
 
 """
@@ -209,8 +220,7 @@ tab2 = html.Div([
 					],
 					placeholder="Pick a dataset",
 					id="line_graph_download_option",
-					style={"background-color": "#EAF2F8", "border": "1px solid #174978",
-						"border-radius": "20px", "color": "#174978"}
+					style={"background-color": "#EAF2F8", "border-radius": "10px", "color": "#174978"}
 				),
 				dcc.Download(id="line_graph_download_data")
 			],style={"margin-left": "10px", "margin-right": "950px"}),
@@ -236,18 +246,19 @@ tab2 = html.Div([
 		html.H4("Tropical Cyclone Pattern", style={"color": "#405A45", "margin-left": "10px"}),
 		html.P(
 			"""
-			With the help of warmer ocean temperatures, tropical cyclones will intensify
-			much easier and faster than in the past. With only a few centimeters of the 
-			sea-level rise, they will push more water inland, allowing them to affect a 
-			more significant part of the coastal regions. As we look at the scatter plot 
-			below, we will see the overall trend that more tropical cyclones are developing
-			on the Atlantic Ocean and making landfalls on the East Coast. Even though the 
-			chart shows most tropical cyclones hit other parts of the East Coast, and that 
-			tri-state region does not experience frequent damage from hurricanes. The truth 
-			is, given that NYC is a coastal city with an average elevation of thirty-three 
-			feet or approximately ten meters, most residents are at risk of experiencing 
-			severe flooding from the impact of a tropical cyclone during more unusual 
-			hurricane season in the future. 	
+			With the help of warmer ocean temperatures, tropical cyclones will 
+			intensify much easier and faster than in the past. With only a few 
+			centimeters of the sea-level rise, they will push more water inland, 
+			allowing them to affect a more significant part of the coastal regions. 
+			As we look at the scatter plot below, we will see the overall trend 
+			that more tropical cyclones are developing on the Atlantic Ocean and 
+			making landfalls on the East Coast. Even though the chart shows, most 
+			tropical cyclones hit other parts of the East Coast instead of making 
+			landfalls in the tri-state region. The truth is, if we look closely at 
+			the chart, where the number of cyclones affected or made landfalls in 
+			tri-state and NYC, we can see that NYC is getting hit by tropical 
+			cyclones more frequently in recent years. And that increases the chance 
+			of NYC suffering from severe coastal flooding in the future.	
 			""",
 		style={"color": "#405A45", "text-align": "justify", "margin-left": "10px", "margin-right": "10px"}),
 
@@ -308,8 +319,7 @@ tab2 = html.Div([
 					],
 					placeholder="Pick a dataset",
 					id="scatter_plot_download_option",
-					style={"background-color": "#EFF8EA", "border": "1px solid #405A45",
-						"border-radius": "20px", "color": "#405A45"}
+					style={"background-color": "#EFF8EA", "border-radius": "10px", "color": "#405A45"}
 				),
 				dcc.Download(id="scatter_plot_download_data")
 			],style={"margin-left": "10px", "margin-right": "950px"}),
@@ -336,7 +346,9 @@ Tab3
 Choropleth Map content and Bar Chart content
 """
 tab3 = html.Div([
-	html.H4("will be available by the end of Monday or Tuesday"),
+	html.H4("Potential Coastal Flooding Spots of NYC"),
+	html.H4("Coming soon"),
+
 	# Map options
 	dcc.Slider(
 	min=2010, 
@@ -356,7 +368,8 @@ tab3 = html.Div([
 	# Map 
 	dcc.Graph(id="map"),
 
-	html.H4("Stacked Barchart"),
+	html.H4("Bar Chart"),
+	html.H4("Following Map"),
 
 	# Bar chart options
 	dbc.Button("2010", id="bar_2010", outline=True, color="info", class_name="me-1", style=bar_button_styles),
@@ -497,7 +510,7 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 
 def download_line_graph_dataset(line_graph_download_option):
 	if line_graph_download_option == "global_sea_level_rise":
-		return dcc.send_data_frame((datasets.global_sea_level_rise).to_csv, "global_sea_level_rise.csv")
+		return dcc.send_data_frame((datasets.global_sea_level).to_csv, "global_sea_level_rise.csv")
 	elif line_graph_download_option == "east_coast_sea_level_rise":
 		return dcc.send_data_frame((datasets.east_coast_sea_level).to_csv, "east_coast_sea_level_rise.csv")
 	elif line_graph_download_option == "nyc_sea_level_rise":
