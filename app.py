@@ -522,13 +522,13 @@ Including:
 def build_scatter_plot(value):
 	if value == "ao_c":
 		title = "The number of cyclones formed on the Atlantic Ocean"
-		data = atlantic_ocean_cyclones_count
+		data = datasets.atlantic_ocean_cyclones_count
 	elif value == "ec_c":
 		title = "The number of cyclones made landfall on the East Coast"
-		data = east_coast_landfall_count
+		data = datasets.east_coast_landfall_count
 	elif value == "tri_state_c":
 		title = "The number of cyclones made landfall or affected Tri-State Area and NYC"
-		data = tri_state_region_and_nyc_count
+		data = datasets.tri_state_region_and_nyc_count
 	fig = px.scatter(
 		data,
 		x = "Year",
