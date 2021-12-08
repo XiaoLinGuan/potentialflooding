@@ -7,8 +7,182 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import statsmodels.api as sm
-import datasets
+import pandas as pd
 
+"""
+Clean and Filter the datasets
+"""
+
+"""
+Line Graph -> Sea Level Rise Trend
+"""
+# Return the year in a column
+def specific_year(year):
+	return year[7:11]
+
+# Return the whole number of the measurement
+def whole_number(x):
+	return round(x)
+
+# Read dataset.
+df = pd.read_csv("techrpt083.csv", skiprows=15, low_memory=False)
+# print(df)
+
+# For all three regions, we will use 1.0 HIGH scenario for plotting the data.
+# It corresponds to 83rd percentile of the climate-related sea level projections.
+
+# Global Scale
+global_sea_level = df[(df["Site"]=="GMSL") & (df["Scenario"] == "1.0 - HIGH")]
+
+# Swap index column with header.
+global_sea_level = global_sea_level.swapaxes("index", "columns")
+
+# Reset index column.
+global_sea_level = global_sea_level.reset_index()
+
+# Remove unwanted rows from the data frame.
+global_sea_level = global_sea_level.iloc[6:]
+
+# Rename the columns for applying functions.
+global_sea_level.columns = ["Year", "Centimeter"]
+global_sea_level["Year"] = global_sea_level["Year"].apply(specific_year)
+global_sea_level["Inch"] = (global_sea_level["Centimeter"]/2.54).apply(whole_number)
+global_sea_level["Region"] = "Global"
+# print(global_sea_level)
+
+# East Coast
+# Find all the locations on th east coast according to their latitude and longitude.
+east_coast_sea_level = df[(df["Latitude"]>=24) & (df["Latitude"]<=44)]
+east_coast_sea_level = df[(df["Longitude"]>=-82) & (df["Longitude"]<=-66)]
+
+# Find all the rows with 1.0 HIGH Scenario.
+east_coast_sea_level = east_coast_sea_level[east_coast_sea_level["Scenario"]=="1.0 - HIGH"]
+
+# Remove the unwanted columns from the data frame.
+east_coast_sea_level = east_coast_sea_level.iloc[:,6:21]
+
+# Take the median of each column.
+east_coast_sea_level = east_coast_sea_level.median()
+east_coast_sea_level = east_coast_sea_level.reset_index()
+
+# Rename the columns for applying functions.
+east_coast_sea_level.columns = ["Year", "Centimeter"]
+east_coast_sea_level["Year"] = east_coast_sea_level["Year"].apply(specific_year)
+east_coast_sea_level["Inch"] = (east_coast_sea_level["Centimeter"]/2.54).apply(whole_number)
+east_coast_sea_level["Region"] = "East Coast"
+
+# east_coast_sea_level = east_coast_sea_
+# print(east_coast_sea_level)
+
+# NYC
+nyc_sea_level = df[(df["Site"]=="NEW YORK") & (df["Scenario"] == "1.0 - HIGH")]
+
+# Swap index column with header.
+nyc_sea_level = nyc_sea_level.swapaxes("index", "columns")
+
+# Reset index column.
+nyc_sea_level = nyc_sea_level.reset_index()
+
+# Remove unwanted rows from the data frame.
+nyc_sea_level = nyc_sea_level.iloc[6:]
+
+# Rename the columns for applying functions.
+nyc_sea_level.columns = ["Year", "Centimeter"]
+nyc_sea_level["Year"] = nyc_sea_level["Year"].apply(specific_year)
+nyc_sea_level["Inch"] = (nyc_sea_level["Centimeter"]/2.54).apply(whole_number)
+nyc_sea_level["Region"] = "NYC"
+# print(nyc_sea_level)
+
+# ALl three regions
+all_three_regions_sea_level = pd.concat([global_sea_level, east_coast_sea_level, nyc_sea_level])
+# print(all_three_regions_sea_level)
+
+"""
+Scatter Plot -> Tropical Cyclones Pattern
+"""
+# Number of tropical cyclones formed on the Atlantic Ocean.
+# Read dataset.
+df = pd.read_csv("ibtracs.NA.list.v04r00.csv", skiprows=[1], low_memory=False)
+# print(df)
+
+# Take only the rows with nature value equal to HU, TS, or TD.
+df = df[(df["USA_STATUS"]=="HU") | (df["USA_STATUS"]=="TS") | (df["USA_STATUS"]=="TD")]
+
+# Take only three columns from the original dataset.
+df1 = df[["SID", "SEASON", "USA_STATUS"]]
+
+# Keep one instance of each unique cyclone id.
+df1 = df1.drop_duplicates(subset="SID", keep="last")
+
+# Count the number of cyclones formed each year by grouping SEASON and USA_STATUS.
+df1 = df1.groupby(["SEASON", "USA_STATUS"]).count()
+
+# Reset index.
+atlantic_ocean_cyclones_count = df1.reset_index()
+
+# Rename the columns.
+atlantic_ocean_cyclones_count.columns = ["Year", "Category", "Count"]
+# print(atlantic_ocean_cyclones_count)
+
+# Number of tropical cyclones made landfall on the East Coast.
+# Take only the rows with USA_RECORD equal to L, which means made landfall on the East Coast.
+df2 = df[df["USA_RECORD"]=="L"]
+
+# Take only three columns from the data frame.
+df2 = df2[["SID", "SEASON", "USA_STATUS"]]
+
+# Keep one instance of each unique cyclone id.
+df2 = df2.drop_duplicates(subset="SID", keep="last")
+
+# Count the number of cyclones made landfall on East coast each year by grouping SEASON and USA_STATUS.
+df2 = df2.groupby(["SEASON", "USA_STATUS"]).count()
+
+# Reset index.
+east_coast_landfall_count = df2.reset_index()
+
+# Rename the columns.
+east_coast_landfall_count.columns = ["Year", "Category", "Count"]
+# print(east_coast_landfall_count)
+
+# Number of cyclones made landfall or affected Tri-State and NYC.
+# Return the category of a cyclone.
+def rename_category(category):
+	if category[0:8] == "Category":
+		return "HU"
+	elif category == "Major Hurricane":
+		return "HU"
+	elif category == "Likely a Category 3":
+		return "HU"
+	elif category == "85mph Post-Tropical": 
+		return "HU"
+	elif category == "Tropical Storm":
+		return "TS"
+	elif category == "Unknown":
+		return "TD"
+
+# Read dataset.
+df = pd.read_csv("tri_state_and_nyc.csv")
+# print(df)
+
+# Take only three columns from the original dataset.
+df = df[["YEAR2", "NAME", "CATEGORY AT LANDFALL"]]
+
+# Apply function to reformat the category column.
+df["CATEGORY AT LANDFALL"] = df["CATEGORY AT LANDFALL"].apply(rename_category)
+
+# Count the number of cyclones each year by grouping YEAR2 and CATEGORY AT LANDFALL.
+tri_state_region_and_nyc_count = df.groupby(["YEAR2", "CATEGORY AT LANDFALL"]).count()
+
+# Reset index.
+tri_state_region_and_nyc_count = tri_state_region_and_nyc_count.reset_index()
+
+# Rename the columns.
+tri_state_region_and_nyc_count.columns = ["Year", "Category", "Count"]
+# print(tri_state_region_and_nyc_count)
+
+"""
+Build the Web App
+"""
 app = dash.Dash(
 	external_stylesheets=[dbc.themes.FLATLY]
 )
@@ -16,32 +190,37 @@ server = app.server
 
 tab_style = {
 	"border": "2px solid #97CBEC",
-	"borderRadius": "20px",
+	"border-radius": "20px",
 	"font-size": "120%",
 }
 
 selected_tab_style = {
-	"backgroundColor": "#C3E0E5",
+	"background-color": "#C3E0E5",
 	"border": "2px solid #97CBEC",
-	"borderRadius": "20px",
-	"fontWeight": "bold",
+	"border-radius": "20px",
+	"font-weight": "bold",
 	"font-size": "120"
 }
 
 overview_content_style = {
-	"margin-left": "10px", 
-	"margin-right": "10px"
+	"background-color": "#EAF2F8",
+	"border": "5px solid white",
+	"border-radius": "20px",
 }
 
 lg_data_download_button_style = {
 	"border": "1px solid #174978", 
-	"borderRadius": "15px"
+	"border-Radius": "15px"
 }
 
 sp_data_download_button_style = {
 	"border": "1px solid #405A45",
-	"borderRadius": "15px"
+	"border-Radius": "15px"
 }
+
+bar_button_styles = {"border": "2px solid #aaf0d1"}
+
+pie_button_styles = {"border": "2px solid #66ddaa"}
 
 """
 Title of the dashboard
@@ -54,15 +233,11 @@ title = html.Div([
 			"font-size": "40px",
 			"text-align": "center",
 			"border": "1px solid white",
-			"borderRadius": "20px",
+			"border-radius": "20px",
 			"background-image": "linear-gradient(to bottom, #B7F8DB, #50A7C2)"
 		}
 	)	
 ], style={"margin-left": "10px", "margin-right": "10px"})
-
-bar_button_styles = {"border": "2px solid #aaf0d1"}
-
-pie_button_styles = {"border": "2px solid #66ddaa"}
 
 """
 Tab1
@@ -78,26 +253,27 @@ tab1 = html.Div([
 	
 	# Brief description of Line Graph
 	# and explain how the data is obtained and processed
-	html.H5("Line Graph", style={"color": "#174978"}),
+	html.H5("Line Graph", style={"color": "#174978", "margin-left": "5px"}),
 
 	# Brief description of Scatter Plot
 	# and explain how the data is obtained and processed
-	html.H5("Scatter Plot", style={"color": "#405A45"}),
+	html.H5("Scatter Plot", style={"color": "#405A45", "margin-left": "5px"}),
 
 	# Brief description of Choropleth Map
 	# and explain how the data is obtained and processed
-	html.H5("Choropleth Map", style={"color": ""}),
+	html.H5("Choropleth Map", style={"color": "", "margin-left": "5px"}),
 
 	# Brief description of Bar Chart
 	# and explain how the data is obtained and processed
-	html.H5("Bar Chart", style={"color": ""}),
+	html.H5("Bar Chart", style={"color": "", "margin-left": "5px"}),
 
 	# Data sources
-	html.H5("Original Data Sources:"),
+	html.H5("Original Data Sources:", style={"margin-left": "5px"}),
 	# html.H6(html.Ul(html.A(html.H6("sea level rise", style={"color": "purple"}), href="https://dash.plotly.com/dash-html-components/img", target="_blank"),)),
 
 	# Link to GitHub Source Code Page
-	html.H6(html.A("GitHub Source Code Page", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank")),
+	html.H6(html.A("GitHub Source Code Page", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank"),
+		style={"margin-left": "5px"}),
 
 	# Contact Information
 	html.Div([
@@ -108,8 +284,8 @@ tab1 = html.Div([
 			html.Br(),
 			"Email address: ", html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
 		])
-	])
-], id="overview_tab_content")
+	], style={"margin-left": "5px"})
+], id="overview_tab_content", style=overview_content_style)
 
 """
 Tab2
@@ -133,7 +309,7 @@ tab2 = html.Div([
 			in the world, has a population of more than eight million people is 
 			at high risk of constant flooding. By comparing the relative sea-level
 			rise on a global scale and in NYC, NYC has a higher chance of experiencing
-			a more drastic sea-level increase. Even when we compare NYC's mean 
+			a more drastic sea-level increase. Even when we compare NYC"s mean 
 			sea-level rise to the data of the East Coast, NYC will still take the
 			lead in experiencing an acceleration of sea-level rise. 
 			"""
@@ -191,20 +367,24 @@ tab2 = html.Div([
 		# Line Graph Dataset
 		html.Div(id="line_graph_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 
-		# Download Buttons for users to download datasets used in line graph
+		# Dropdown menu for users to download datasets used in line graph
 		html.Div([
 			html.H6(html.I(html.B("Download datasets used in line graph: ")), style={"margin-left": "10px"}),
 			html.Div([
-				dbc.Button("global_sea_level_rise.csv", id="gsl_button", n_clicks=0, 
-					outline=True, size="sm", color="info", class_name="me-1", style=lg_data_download_button_style),
-				dbc.Button("east_coast_sea_level_rise.csv", id="ecsl_button", n_clicks=0, 
-					outline=True, size="sm", color="info", class_name="me-1", style=lg_data_download_button_style),
-				dbc.Button("nyc_sea_level_rise.csv", id="nycsl_button", n_clicks=0, 
-					outline=True, size="sm", color="info", class_name="me-1", style=lg_data_download_button_style),
-				dbc.Button("all_sea_level_rise.csv", id="allsl_button", n_clicks=0, 
-					outline=True, size="sm", color="info", class_name="me-1", style=lg_data_download_button_style),
+				dcc.Dropdown(
+					options=[
+						{"label": "global_sea_level_rise.csv", "value": "global_sea_level_rise"},
+						{"label": "east_coast_sea_level_rise.csv", "value": "east_coast_sea_level_rise"},
+						{"label": "nyc_sea_level_rise.csv", "value": "nyc_sea_level_rise"},
+						{"label": "all_three_regions_sea_level_rise.csv", "value": "all_three_regions_sea_level_rise"}
+					],
+					placeholder="Pick a dataset",
+					id="line_graph_download_option",
+					style={"background-color": "#EAF2F8", "border": "1px solid #174978",
+						"border-radius": "20px", "color": "#174978"}
+				),
 				dcc.Download(id="line_graph_download_data")
-			], style={"margin-left": "10px"}),
+			],style={"margin-left": "10px", "margin-right": "950px"}),
 			html.H6(
 				html.I([
 					"""
@@ -212,21 +392,19 @@ tab2 = html.Div([
 					the original datasets, please click on 
 					""", 
 					html.B("Overview"), 
-					""", 
-					scroll to the bottom of the page, and click on any links under Data 
-					Sources. To get the exact result or similar graphs, please follow the 
-					instructions on downloading the correct data. Sorry for the inconvenience.
+					""", scroll to the bottom of the page, and click on any links under Data 
+					Sources. Sorry for the inconvenience.
 					"""
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
-	], style={"backgroundColor": "#CDDEEE", "border": "5px solid white", "borderRadius": "20px"}),
+	], style={"background-color": "#CDDEEE", "border": "5px solid white", "border-radius": "20px"}),
 	# End of Line Graph Content
 
 	# Scatter Plot content
 	html.Div([
 		# Scatter Plot Descriprtion
-		html.H4("Tropical Cyclones Pattern", style={"color": "#405A45", "margin-left": "10px"}),
+		html.H4("Tropical Cyclone Pattern", style={"color": "#405A45", "margin-left": "10px"}),
 		html.P(
 			"""
 			With the help of warmer ocean temperatures, tropical cyclones will intensify
@@ -265,7 +443,7 @@ tab2 = html.Div([
 			dbc.ListGroupItem("HU-Hurricane", id="hu"),
 			dbc.ListGroupItem("TS-Tropical Storm", id="ts"),
 			dbc.ListGroupItem("TD-Tropical Depression", id="td")
-		],horizontal=True, style={"backgroundColor": "#DDF2D1", "margin-left": "10px"}),
+		],horizontal=True, style={"background-color": "#DDF2D1", "margin-left": "10px"}),
 
 		# Scatter Plot
 		dcc.Graph(id="scatter_plot"),
@@ -289,18 +467,23 @@ tab2 = html.Div([
 		# Scatter Plot Dataset
 		html.Div(id="scatter_plot_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 
-		# Download Buttons for users to download datasets used in scatter plot
+		# Dropdown menu for users to download datasets used in scatter plot
 		html.Div([
-			html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
+			html.H6(html.I(html.B("Download datasets used in line graph: ")), style={"margin-left": "10px"}),
 			html.Div([
-				dbc.Button("atlantic_ocean_cyclones_count.csv", id="ao_button", n_clicks=0, 
-					outline=True, size="sm", color="success", class_name="me-1", style=sp_data_download_button_style),
-				dbc.Button("east_coast_landfall_count.csv", id="ec_button", n_clicks=0, 
-					outline=True, size="sm", color="success", class_name="me-1", style=sp_data_download_button_style),
-				dbc.Button("tri_state_and_nyc_landfall_count.csv", id="ts_and_nyc_button", n_clicks=0, 
-					outline=True, size="sm", color="success", class_name="me-1", style=sp_data_download_button_style),
+				dcc.Dropdown(
+					options=[
+						{"label": "atlantic_ocean_cyclones_count.csv", "value": "atlantic_ocean_dataset"},
+						{"label": "east_coast_landfall_count.csv", "value": "east_coast_landfall_dataset"},
+						{"label": "tri_state_and_nyc_landfall_count.csv", "value": "tri_state_and_nyc_dataset"}
+					],
+					placeholder="Pick a dataset",
+					id="scatter_plot_download_option",
+					style={"background-color": "#EFF8EA", "border": "1px solid #405A45",
+						"border-radius": "20px", "color": "#405A45"}
+				),
 				dcc.Download(id="scatter_plot_download_data")
-			], style={"margin-left": "10px"}),
+			],style={"margin-left": "10px", "margin-right": "950px"}),
 			html.H6(
 				html.I([
 					"""
@@ -308,17 +491,16 @@ tab2 = html.Div([
 					the original datasets, please click on 
 					""", 
 					html.B("Overview"), 
-					""", 
-					scroll to the bottom of the page, and click on any links under Data 
-					Sources. To get the exact result or similar graphs, please follow the 
-					instructions on downloading the correct data. Sorry for the inconvenience.
+					""", scroll to the bottom of the page, and click on any links under Data 
+					Sources. Sorry for the inconvenience.
 					"""
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
-	], style={"backgroundColor": "#DDF2D1", "border": "5px solid white", "borderRadius": "20px"})
+	], style={"background-color": "#DDF2D1", "border": "5px solid white", "border-radius": "20px"})
 	# End of Scatter Plot Content
 ])
+# End of Tab2.
 
 """
 Tab3
@@ -387,28 +569,28 @@ def build_line_graph(region, measurement):
 			y = "Inch"
 		elif measurement == "measure_cm":
 			y = "Centimeter"
-		data = datasets.global_sl
+		data = global_sea_level
 		title = "Relative Sea Level Rise on Global Scale"
 	elif region == "east_coast_sl":
 		if measurement == "measure_inch":
 			y = "Inch"
 		elif measurement == "measure_cm":
 			y = "Centimeter"
-		data = datasets.ec_sl
+		data = east_coast_sea_level
 		title = "Relative Sea Level Rise in East Coast"
 	elif region == "nyc_sl":
 		if measurement == "measure_inch":
 			y = "Inch"
 		elif measurement == "measure_cm":
 			y = "Centimeter"
-		data = datasets.nyc_sl
+		data = nyc_sea_level
 		title = "Relative Sea Level Rise in NYC Region"
 	elif region == "all_sl":
 		if measurement == "measure_inch":
 			y = "Inch"
 		elif measurement == "measure_cm":
 			y = "Centimeter"
-		data = datasets.all_sl
+		data = all_three_regions_sea_level
 		title = "Relative Sea Level Rise in All Three Regions"
 	fig = px.line(
 		data, 
@@ -419,7 +601,7 @@ def build_line_graph(region, measurement):
 		symbol = "Region",
 		title = title
 	)
-	fig.update_layout(paper_bgcolor = "#CDDEEE", plot_bgcolor = "#AECCE4")
+	fig.update_layout(paper_bgcolor = "#CDDEEE", plot_bgcolor = "#AECCE4", title_font=dict(size=20))
 	return fig
 
 # Show or hide datasets for the line graph.
@@ -432,13 +614,13 @@ def build_line_graph(region, measurement):
 def show_or_hide_lg_dataset(option_show_or_hide, region):
 	if option_show_or_hide == "l_g_show_dataset":
 		if region == "global_sl":
-			data = datasets.global_sl 
+			data = global_sea_level
 		elif region == "east_coast_sl":
-			data = datasets.ec_sl
+			data = east_coast_sea_level
 		elif region == "nyc_sl":
-			data = datasets.nyc_sl
+			data = nyc_sea_level
 		elif region == "all_sl":
-			data = datasets.all_sl
+			data = all_three_regions_sea_level
 		filter_example = html.Div([
 			html.H6(html.U("The dataset will change depending on the region the user chooses at the top of the graph.")),
 			html.H6(
@@ -470,8 +652,8 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 			filter_action="native",
 			columns=[{"name": i, "id": i,} for i in (data.columns)],
 			page_size=10,
-			style_header={"backgroundColor": "#AEB7C8", "border": "1px solid #174978", "font-size": "14px"},
-			style_cell={"backgroundColor": "#E4ECF7", "border": "1px solid #174978", "font-size": "14px"}
+			style_header={"background-color": "#AEB7C8", "border": "1px solid #174978", "font-size": "14px"},
+			style_cell={"background-color": "#E4ECF7", "border": "1px solid #174978", "font-size": "14px"}
 		)
 		return filter_example, dataset
 	else:
@@ -480,22 +662,19 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 		return message1, message2
 
 # Download datasets that are used in line graph.
-@app.callback(Output(component_id="line_graph_download_data", component_property="data"),
-	[Input(component_id="gsl_button", component_property="n_clicks"),
-	Input(component_id="ecsl_button", component_property="n_clicks"),
-	Input(component_id="nycsl_button", component_property="n_clicks"),
-	Input(component_id="allsl_button", component_property="n_clicks")])
+@app.callback(
+	Output(component_id="line_graph_download_data", component_property="data"),
+	Input(component_id="line_graph_download_option", component_property="value"))
 
-def download_line_graph_dataset(gsl_button_click, ecsl_button_click, nycsl_button_click, allsl_button_click):
-	if gsl_button_click > 0:
-		return dcc.send_data_frame((datasets.global_sl).to_csv, "global_sea_level_rise.csv")
-	elif ecsl_button_click > 0:
-		return dcc.send_data_frame((datasets.ec_sl).to_csv, "east_coast_sea_level_rise.csv")
-	elif nycsl_button_click > 0:
-		return dcc.send_data_frame((datasets.nyc_sl).to_csv, "nyc_sea_level_rise.csv")
-	elif allsl_button_click > 0:
-		return dcc.send_data_frame((datasets.all_sl).to_csv, "all_sea_level_rise.csv")
-
+def download_line_graph_dataset(line_graph_download_option):
+	if line_graph_download_option == "global_sea_level_rise":
+		return dcc.send_data_frame(global_sea_level.to_csv, "global_sea_level_rise.csv")
+	elif line_graph_download_option == "east_coast_sea_level_rise":
+		return dcc.send_data_frame(east_coast_sea_level.to_csv, "east_coast_sea_level_rise.csv")
+	elif line_graph_download_option == "nyc_sea_level_rise":
+		return dcc.send_data_frame(nyc_sea_level.to_csv, "nyc_sea_level_rise.csv")
+	elif line_graph_download_option == "all_three_regions_sea_level_rise":
+		return dcc.send_data_frame(all_three_regions_sea_level.to_csv, "all_three_regions_sea_level_rise.csv")
 """End of Line Graph functions"""
 
 """
@@ -514,19 +693,19 @@ Including:
 def build_scatter_plot(value):
 	if value == "ao_c":
 		title = "The number of cyclones formed on the Atlantic Ocean"
-		data = datasets.cyclones_AO
+		data = atlantic_ocean_cyclones_count
 	elif value == "ec_c":
 		title = "The number of cyclones made landfall on the East Coast"
-		data = datasets.landfall_EC
+		data = east_coast_landfall_count
 	elif value == "tri_state_c":
 		title = "The number of cyclones made landfall or affected Tri-State Area and NYC"
-		data = datasets.tri_state_and_nyc
+		data = tri_state_region_and_nyc_count
 	fig = px.scatter(
 		data,
 		x = "Year",
 		y = "Count",
 		color = "Category",
-		symbol = "Category",
+		symbol = "Category", 
 		size = "Count",
 		trendline = "ols",
 		trendline_scope = "overall",
@@ -544,43 +723,28 @@ def build_scatter_plot(value):
 	Input(component_id="scatter_plot_radioitems", component_property="value"))
 
 def match_legend_color(value):
-	if value == "ao_c":
+	if ((value == "ao_c") | (value == "ec_c")):
 		return (
-			{"color": "#9398f5", "backgroundColor": "#DDF2D1",
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "2px solid white", "borderRight": "1px solid white"}, 
-			{"color": "#4db299", "backgroundColor": "#DDF2D1",
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "1px solid white", "borderRight": "1px solid white"},
-			{"color": "#e8907e", "backgroundColor": "#DDF2D1", 
-			"borderTop": "2px solid white", "borderBottom": "2px solid white",
-			"borderLeft": "1px solid white", "borderRight": "2px solid white"})
-	elif value == "ec_c":
-		return (
-			{"color": "#9398f5", "backgroundColor": "#DDF2D1", 
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "2px solid white", "borderRight": "1px solid white"}, 
-			{"color": "#e8907e", "backgroundColor": "#DDF2D1", 
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "1px solid white", "borderRight": "1px solid white"}, 
-			{"color": "#4db299", "backgroundColor": "#DDF2D1", 
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "1px solid white", "borderRight": "2px solid white"}
-		)
+			{"color": "#9398f5", "background-color": "#DDF2D1",
+			"border-top": "2px solid white", "border-bottom": "2px solid white", 
+			"border-left": "2px solid white", "border-right": "1px solid white"}, 
+			{"color": "#e8907e", "background-color": "#DDF2D1",
+			"border-top": "2px solid white", "border-bottom": "2px solid white", 
+			"border-left": "1px solid white", "border-right": "1px solid white"},
+			{"color": "#4db299", "background-color": "#DDF2D1", 
+			"border-top": "2px solid white", "border-bottom": "2px solid white",
+			"border-left": "1px solid white", "border-right": "2px solid white"})
 	elif value == "tri_state_c":
 		return (
-			{"color": "#e8907e", "backgroundColor": "#DDF2D1",
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "2px solid white", "borderRight": "1px solid white"}, 
-			{"color": "#9398f5", "backgroundColor": "#DDF2D1",
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "1px solid white", "borderRight": "1px solid white"}, 
-			{"color": "#acacac", "backgroundColor": "#DDF2D1", 
-			"borderTop": "2px solid white", "borderBottom": "2px solid white", 
-			"borderLeft": "1px solid white", "borderRight": "2px solid white",
-			"text-decoration": "line-through", "text-decoration-color": "#000000",
-			"text-decoration-thickness": "2px"}
-		)
+			{"color": "#e8907e", "background-color": "#DDF2D1",
+			"border-top": "2px solid white", "border-bottom": "2px solid white", 
+			"border-left": "2px solid white", "border-right": "1px solid white"}, 
+			{"color": "#4db299", "background-color": "#DDF2D1",
+			"border-top": "2px solid white", "border-bottom": "2px solid white", 
+			"border-left": "1px solid white", "border-right": "1px solid white"}, 
+			{"color": "#9398f5", "background-color": "#DDF2D1", 
+			"border-top": "2px solid white", "border-bottom": "2px solid white", 
+			"border-left": "1px solid white", "border-right": "2px solid white",})
 
 # Show or hide scatter plot dataset
 @app.callback(
@@ -592,11 +756,11 @@ def match_legend_color(value):
 def shor_or_hide_sp_dataset(option_show_or_hide, region):
 	if option_show_or_hide == "s_c_show_dataset":
 		if region == "ao_c":
-			data = datasets.cyclones_AO 
+			data = atlantic_ocean_cyclones_count
 		elif region == "ec_c":
-			data = datasets.landfall_EC
+			data = east_coast_landfall_count
 		elif region == "tri_state_c":
-			data = datasets.tri_state_and_nyc
+			data = tri_state_region_and_nyc_count
 		filter_example = html.Div([
 			html.H6(html.U("The dataset will change depending on the region the user chooses at the top of the graph.")),
 			html.Table([
@@ -622,8 +786,8 @@ def shor_or_hide_sp_dataset(option_show_or_hide, region):
 			filter_action="native",
 			columns=[{"name": i, "id": i,} for i in (data.columns)],
 			page_size=10,
-			style_header={"backgroundColor": "#A9BA9D", "border": "1px solid #405A45", "font-size": "14px"},
-			style_cell={"backgroundColor": "#E9EFEA", "border": "1px solid #405A45", "font-size": "14px"}
+			style_header={"background-color": "#A9BA9D", "border": "1px solid #405A45", "font-size": "14px"},
+			style_cell={"background-color": "#E9EFEA", "border": "1px solid #405A45", "font-size": "14px"}
 		)
 		return filter_example, dataset
 	else:
@@ -632,18 +796,17 @@ def shor_or_hide_sp_dataset(option_show_or_hide, region):
 		return message1, message2
 
 # Download datasets that are used in scatter plot.
-@app.callback(Output(component_id="scatter_plot_download_data", component_property="data"),
-	[Input(component_id="ao_button", component_property="n_clicks"),
-	Input(component_id="ec_button", component_property="n_clicks"),
-	Input(component_id="ts_and_nyc_button", component_property="n_clicks")])
+@app.callback(
+	Output(component_id="scatter_plot_download_data", component_property="data"),
+	Input(component_id="scatter_plot_download_option", component_property="value"))	
 
-def download_line_graph_dataset(ao_button_click, ec_button_click, ts_and_nyc_button_click):
-	if ao_button_click > 0:
-		return dcc.send_data_frame((datasets.cyclones_AO).to_csv, "atlantic_ocean_cyclones_count.csv")
-	elif ec_button_click > 0:
-		return dcc.send_data_frame((datasets.landfall_EC).to_csv, "east_coast_landfall_count.csv")
-	elif ts_and_nyc_button_click > 0:
-		return dcc.send_data_frame((datasets.tri_state_and_nyc).to_csv, "tri_state_and_nyc_landfall_count.csv")
+def download_line_graph_dataset(scatter_plot_download_option):
+	if scatter_plot_download_option == "atlantic_ocean_dataset":
+		return dcc.send_data_frame(atlantic_ocean_cyclones_count.to_csv, "atlantic_ocean_cyclones_count.csv")
+	elif scatter_plot_download_option == "east_coast_landfall_dataset":
+		return dcc.send_data_frame(east_coast_landfall_count.to_csv, "east_coast_landfall_count.csv")
+	elif scatter_plot_download_option == "tri_state_and_nyc_dataset":
+		return dcc.send_data_frame(tri_state_region_and_nyc_count.to_csv, "tri_state_and_nyc_landfall_count.csv")	
 """End of Scatter Plot functions"""
 
 # Build the Map
@@ -671,7 +834,6 @@ def build_stacked_bar_chart(value):
 	)
 	return fig
 
-# The Webapp.
 app.layout = html.Div(
 	children = [title, tabs]
 )
