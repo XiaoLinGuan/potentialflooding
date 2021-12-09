@@ -417,11 +417,11 @@ tab3 = html.Div([
 
 		html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
 
-		Bar Chart Dataset
-		By default, the dataset is hidden so that user can focus on the graph
+		# Bar Chart Dataset
+		# By default, the dataset is hidden so that user can focus on the graph
 		html.Div(id="bar_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 	
-		Dropdown menu for users to download datasets used in line graph
+		# Dropdown menu for users to download datasets used in line graph
 		html.Div([
 			html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
 			html.Div([
@@ -456,10 +456,10 @@ tab3 = html.Div([
 		])
 
 	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"}),
-	End of Bar Chat Content
+	# End of Bar Chat Content
 
 
-	Bubble Chart content
+	# Bubble Chart content
 	html.Div([
 		# Bubble Chart Description
 
