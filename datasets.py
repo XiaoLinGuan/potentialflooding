@@ -400,7 +400,7 @@ tab3 = html.Div([
 		]),
 		
 		# Bar Chart
-		dcc.Graph(id="bar_chart")
+		dcc.Graph(id="bar_chart"),
 
 		# Options to show or hide bar chart dataset.
 		dbc.RadioItems(
