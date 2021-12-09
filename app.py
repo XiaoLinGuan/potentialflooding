@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import statsmodels.api as sm
-import folium
+# import folium
 import datasets
 
 """
