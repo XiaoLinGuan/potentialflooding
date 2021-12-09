@@ -7,6 +7,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import statsmodels.api as sm
+# import folium
 import datasets
 
 """
@@ -46,10 +47,6 @@ sp_data_download_button_style = {
 	"border": "1px solid #405A45",
 	"border-Radius": "15px"
 }
-
-bar_button_styles = {"border": "2px solid #aaf0d1"}
-
-pie_button_styles = {"border": "2px solid #66ddaa"}
 
 """
 Title of the dashboard
@@ -110,20 +107,16 @@ tab1 = html.Div([
 
 	# Contact Information
 	html.Div([
-		html.H6(html.B("Get in touch"), style={"color": ""}),
+		html.H6(html.B("Get in touch"), style={"color": "black"}),
 		html.H6("Feel free to reach out for any improvements that I can work on for this project."),
 		html.Address([
-			"Gmail address: ", 
+			"📧",
 			html.A("xiaolinggguan@gmail.com", href="mailto:xiaolinggguan@gmail.com", target="_blank"),
 			html.Br(),
-			"Email address: ", 
+			"📧", 
 			html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
 		]),
 	], style={"margin-left": "5px", "margin-right": "100px"}),
-
-	# Copyright content
-	# html.Hr(style={"border": "1px dashed white"}),
-	# html.Footer(html.Small("©2021 Xiao Lin Guan. All Rights Reserved"))
 
 ], id="overview_tab_content", style=overview_content_style)
 
@@ -205,6 +198,7 @@ tab2 = html.Div([
 		html.Div(id="line_graph_filter_example", style={"margin-left": "10px"}),
 	
 		# Line Graph Dataset
+		# By default, the dataset is hidden so that user can focus on the graph
 		html.Div(id="line_graph_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 
 		# Dropdown menu for users to download datasets used in line graph
@@ -305,6 +299,7 @@ tab2 = html.Div([
 		html.Div(id="scatter_plot_filter_example", style={"margin-left": "10px"}),
 
 		# Scatter Plot Dataset
+		# By default, the dataset is hidden so that user can focus on the graph
 		html.Div(id="scatter_plot_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 
 		# Dropdown menu for users to download datasets used in scatter plot
@@ -343,41 +338,124 @@ tab2 = html.Div([
 
 """
 Tab3
-Choropleth Map content and Bar Chart content
+Bar Chart and Bubble Chat content
+Bar Chart will be showing the elevation status of NYC
+Bubble Chart will be showing the probability of a rare flooding event 
 """
 tab3 = html.Div([
-	html.H4("Potential Coastal Flooding Spots of NYC"),
-	html.H4("Coming soon"),
+	# Bar Chart content
+	html.Div([
+		# Bar Chart Description 056A54
+		html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
+		# html.P(),
 
-	# Map options
-	dcc.Slider(
-	min=2010, 
-	max=2050, 
-	step=None,
-	marks={
-		2010: "2010",
-		2020: "2020",
-		2030: "2030",
-		2040: "2040",
-		2050: "2050"
-	},
-	value=2020,
-	included=False,
-	id="slider"),
+		html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
 
-	# Map 
-	dcc.Graph(id="map"),
+		# Bar Chart options
+		html.H5("Choose one of the two variables:", style={"color": "#056A54", "margin-left": "10px"}),
+		dbc.RadioItems(
+			options=[
+				{"label": "Elevation Status", "value": "elevation_status"},
+				{"label": "Population", "value": "population"}
+			], 
+			value="elevation_status",
+			inline=True,
+			id="bar_chart_variable",
+			label_checked_style={"color": "#056A54"},
+			style={"margin-left": "10px"}
+		),
+		html.Div([
+			html.H5("Choose a borough:", style={"color": "#339966", "margin-left": "10px"}),
+			dbc.RadioItems(
+				options=[
+					{"label": "NYC", "value": "nyc_bar"},
+					{"label": "Brooklyn", "value": "bk_bar"},
+					{"label": "Bronx", "value": "bx_bar"},
+					{"label": "Manhattan", "value": "mh_bar"},
+					{"label": "Queens", "value": "q_bar"},
+					{"label": "Staten Island", "value": "si_bar"}
+				], 
+				value="nyc_bar",
+				inline=True,
+				id="bar_chart_radioitems_region",
+				label_checked_style={"color": "#339966"},
+				style={"margin-left": "10px"}
+			),
+			html.Div([
+				html.H6("Choose a way to display the bar chart(Only applies to NYC): ",
+					style={"color": "#339933", "margin-left": "10px"}),
+				dbc.RadioItems(
+					options=[
+						{"label": "Stacked", "value": "stacked_bar_chart"},
+						{"label": "Regular", "value": "regular_bar_chart"}
+					],
+					value="regular_bar_chart",
+					inline=True,
+					id="bar_chart_radioitems_stack",
+					label_checked_style={"color": "#339933"},
+					style={"margin-left": "10px", "font-size": "14px"}
+				)
+			], id="stacked_bar_chart_option")
+		]),
+		
+		# Bar Chart
+		dcc.Graph(id="bar_chart"),
 
-	html.H4("Bar Chart"),
-	html.H4("Following Map"),
+		# Options to show or hide bar chart dataset.
+		dbc.RadioItems(
+			options=[
+				{"label": "Show Dataset", "value": "b_c_show_dataset"},
+				{"label": "Hide Dataset", "value": "b_c_hide_dataset"}
+			],
+			value="b_c_hide_dataset",
+			inline=True,
+			id="bar_chart_show_dateset",
+			label_style={"font-size": "20px", "color": "#056A54"},
+			style={"margin-left": "10px"}
+		),
 
-	# Bar chart options
-	dbc.Button("2010", id="bar_2010", outline=True, color="info", class_name="me-1", style=bar_button_styles),
-	dbc.Button("2020", id="bar_2020", outline=True, color="info", class_name="me-1", style=bar_button_styles),
-	dbc.Button("2030", id="bar_2030", outline=True, color="info", class_name="me-1", style=bar_button_styles),
-	dbc.Button("2040", id="bar_2040", outline=True, color="info", class_name="me-1", style=bar_button_styles),
-	dbc.Button("2050", id="bar_2050", outline=True, color="info", class_name="me-1", style=bar_button_styles),
-	dcc.Graph(id="stacked_bar_chart"),
+		html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
+
+		# Bar Chart Dataset
+		# By default, the dataset is hidden so that user can focus on the graph
+		html.Div(id="bar_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
+	
+		# Dropdown menu for users to download datasets used in line graph
+		html.Div([
+			html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
+			html.Div([
+				dcc.Dropdown(
+					options=[
+						{"label": "nyc_elevation_status_count.csv", "value": "nyc_esc1"},
+						{"label": "nyc_elevation_status_count_stacked.csv", "value": "nyc_esc2"},
+						{"label": "brooklyn_elevation_status_count.csv", "value": "bk_esc"},
+						{"label": "bronx_elevation_status_count.csv", "value": "bx_esc"},
+						{"label": "manhattan_elevation_status_count.csv", "value": "mh_esc"},
+						{"label": "queens_elevation_status_count.csv", "value": "q_esc"},
+						{"label": "staten_island_elevation_status_count.csv", "value": "si_esc"},
+					],
+					placeholder="Pick a dataset",
+					id="bar_chart_download_option",
+					style={"background-color": "#E3EDDD", "border-radius": "10px", "color": "#056A54"}
+				),
+				dcc.Download(id="bar_chart_download_data")
+			],style={"margin-left": "10px", "margin-right": "950px"}),
+			html.H6(
+				html.I([
+					"""
+					The datasets are cleaned and modified for plotting. To read or download 
+					the original datasets, please click on 
+					""", 
+					html.B("Overview"), 
+					""", scroll to the bottom of the page, and click on any links under Data 
+					Sources. Sorry for the inconvenience.
+					"""
+				]),
+			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
+		])
+
+	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"})
+	# End of Bar Chat Content
 ])
 
 # All the tabs
@@ -385,7 +463,7 @@ tabs = html.Div([
 	dcc.Tabs([ 
 			dcc.Tab(tab1, label="Overview", value="tab_1", style=tab_style, selected_style=selected_tab_style),			
 			dcc.Tab(tab2, label="Line Graph and Scatter Plot", value="tab_2", style=tab_style, selected_style=selected_tab_style),
-			dcc.Tab(tab3, label="Choropleth Map and Bar Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style)
+			dcc.Tab(tab3, label="Bar Chart and Bubble Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style)
 		],
 		value="tab_1", # Default tab is Overview 
 		id="tabs"
@@ -464,10 +542,10 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 		elif region == "all_sl":
 			data = datasets.all_three_regions_sea_level
 		filter_example = html.Div([
-			html.H6(html.U("The dataset will change depending on the region the user chooses at the top of the graph.")),
+			html.H6(html.U("The dataset will change depending on the region we choose at the top of the graph.")),
 			html.H6(
 				html.Li([
-					html.U(["For example, if the user chooses ", html.Code("NYC"), """ at the top of the graph,
+					html.U(["For example, if we choose ", html.Code("NYC"), """ at the top of the graph,
 					then the dataset """, html.B("will not"), """ show any regions other than NYC. In this case, if 
 					we apply a filter such as """, html.Code("Global"), " to the dataset, it ", html.B("will not"),
 					" work."])])),
@@ -487,6 +565,26 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 						html.H6(html.Li(["Example 3: Enter ", html.Code("contains East Coast")]))
 					])
 				])
+			]),
+			html.H6([
+				html.B("1st Column: "),
+				html.B("Year", style={"color": "#4C6472"}),
+				" - the year in which the relative sea-level rise is predicted."
+			]),	
+			html.H6([
+				html.B("2nd Column: "),
+				html.B("Centimeter", style={"color": "#4C6472"}),
+				" - the predictive sea-level rise in centimeters."
+			]),
+			html.H6([
+				html.B("3rd Column: "),
+				html.B("Inch", style={"color": "#4C6472"}),
+				" - the predicted sea-level rise in inches."
+			]),
+			html.H6([
+				html.B("4th Column: "),
+				html.B("Region", style={"color": "#4C6472"}),
+				" - the specific region for the predicted result."
 			])
 		], style={"color": "#174978", "margin-left": "10px", "margin-right": "10px"})
 		dataset = dash_table.DataTable(
@@ -498,9 +596,9 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 			style_cell={"background-color": "#E4ECF7", "border": "1px solid #174978", "font-size": "14px"}
 		)
 		return filter_example, dataset
-	else:
-		message1 = html.H6("By default, the dataset is hidden so that user can focus on the graph.", style={"margin-left": "10px"})
-		message2 = html.H6(["User can view the dataset by choosing ", html.U("Show Dataset.")], style={"margin-left": "10px"})
+	else: 
+		message1 = html.H6("Dataset is hidden.", style={"margin-left": "10px"})
+		message2 = html.H6(["To view the dataset, please click on ", html.U("Show Dataset.")], style={"margin-left": "10px"})
 		return message1, message2
 
 # Download datasets that are used in line graph.
@@ -554,7 +652,7 @@ def build_scatter_plot(value):
 		trendline_color_override = "#6C3483",
 		title = title
 	)
-	fig.update_layout(paper_bgcolor="#DDF2D1", plot_bgcolor="#BEE3BA")
+	fig.update_layout(paper_bgcolor="#DDF2D1", plot_bgcolor="#BEE3BA", title_font=dict(size=20))
 	return fig
 
 # Match the color of the legend description to the legend of the scatter plot.
@@ -621,7 +719,30 @@ def shor_or_hide_sp_dataset(option_show_or_hide, region):
 						html.H6(html.Li(["Example 3: Enter ", html.Code("contains TS")]))
 					])
 				])
-				])
+			]),
+			html.H6([
+				html.B("1st Column: "),
+				html.B("Year", style={"color": "#696969"}),
+				" - the year in which the number of tropical cyclones are recorded."
+			]),	
+			html.H6([
+				html.B("2nd Column: "),
+				html.B("Category", style={"color": "#696969"}),
+				" - classify each cyclone according to their maximum sustained surface winds(intensity).",
+				html.P(
+					html.I([
+						"In this dataset, ",
+						html.Abbr("HU", title="Hurricane"), " is the highest rank in the category, ",
+						html.Abbr("TS", title="Tropical Storm"), " is the second one, and ",
+						html.Abbr("TD", title="Tropical Depression"), " is the last one."
+					]),
+				style={"text-indent": "50px"})
+			]),
+			html.H6([
+				html.B("3rd Column: "),
+				html.B("Count", style={"color": "#696969"}),
+				" - the number of cyclones for each year."
+			])
 		], style={"color": "#405A45", "margin-left": "10px"})
 		dataset = dash_table.DataTable(
 			data=data.to_dict("records"),
@@ -633,8 +754,8 @@ def shor_or_hide_sp_dataset(option_show_or_hide, region):
 		)
 		return filter_example, dataset
 	else:
-		message1 = html.H6("By default, the dataset is hidden so that user can focus on the graph.", style={"margin-left": "10px"})
-		message2 = html.H6(["User can view the dataset by choosing ", html.U("Show Dataset.")], style={"margin-left": "10px"})
+		message1 = html.H6("Dataset is hidden", style={"margin-left": "10px"})
+		message2 = html.H6(["To view the dataset, please click on ", html.U("Show Dataset.")], style={"margin-left": "10px"})
 		return message1, message2
 
 # Download datasets that are used in scatter plot.
@@ -651,30 +772,153 @@ def download_line_graph_dataset(scatter_plot_download_option):
 		return dcc.send_data_frame((datasets.tri_state_region_and_nyc_count).to_csv, "tri_state_and_nyc_landfall_count.csv")	
 """End of Scatter Plot functions"""
 
+"""
+Bar Chart functions
+Including:
+
+"""
+# Modify the stacked bar chart option.
+@app.callback(
+	Output(component_id="stacked_bar_chart_option", component_property="style"),
+	[Input(component_id="bar_chart_variable", component_property="value"),
+	Input(component_id="bar_chart_radioitems_region", component_property="value")])
+
+def modify_stacked_bar_chart_option(bar_variable, region_option):
+	if bar_variable == "elevation_status": 
+		if region_option != "nyc_bar":
+			return {"display": "none"}
+	elif bar_variable == "population":
+		return {"display": "none"}
+
+# Build Bar Chart.
+@app.callback(
+	Output(component_id="bar_chart", component_property="figure"),
+	[Input(component_id="bar_chart_variable", component_property="value"),
+	Input(component_id="bar_chart_radioitems_region", component_property="value"),
+	Input(component_id="bar_chart_radioitems_stack", component_property="value")])
+
+def build_bar_chart(bar_variable, region, value):
+	if bar_variable == "elevation_status":
+		if region == "nyc_bar":
+			if value == "stacked_bar_chart":
+				data = datasets.nyc_elevation_status2
+				fig = px.bar(
+					data,
+					x = "Region",
+					y = ["Extremely Low", "Low", "Very Low", "Average"],
+					color_discrete_sequence = ["#FC6659", "#F7A543", "#E1C739", "#A0BF5F"],
+					title = "NYC Elevation Status"
+				)
+				fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20),
+					legend=dict(title="Elevation Status")
+				)
+				fig.update_yaxes(title_text="Count")
+				return fig
+			elif value == "regular_bar_chart":
+				data = datasets.nyc_elevation_status1
+				title = "NYC Elevation Status"
+		elif region == "bk_bar":
+			data = datasets.bk_elevation_status
+			title = "Brooklyn Elevation Status"
+		elif region == "mh_bar":
+			data = datasets.mh_elevation_status
+			title = "Manhattan Elevation Status"
+		elif region == "q_bar":
+			data = datasets.q_elevation_status
+			title = "Queens Elevation Status"
+		elif region == "bx_bar":
+			data = datasets.bx_elevation_status
+			title = "Bronx Elevation Status"
+		elif region == "si_bar":
+			data = datasets.si_elevation_status
+			title = "Staten Island Elevation Status"
+		fig = px.bar(
+			data,
+			x = "Elevation Status",
+			y = "Count",
+			color = "Elevation Status",
+			color_discrete_sequence = ["#FC6659", "#F7A543", "#E1C739", "#A0BF5F"],
+			title = title
+		)
+		fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20))
+		return fig		
+	else:
+		if region == "nyc_bar":
+			data = datasets.nyc_population
+			fig = px.bar(
+				data,
+				x = "Region",
+				y = ["Coastal Neighborhood", "Non-Coastal Neighborhood"],
+				color_discrete_sequence = ["#6495ED", "#A0BF5F"],
+				title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in NYC"
+			)
+			fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20),
+				legend=dict(title="Neighborhood Type")
+			)
+			fig.update_yaxes(title_text="Population")
+			return fig
+		elif region == "bk_bar":
+			data = datasets.bk_population
+			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Brooklyn"
+		elif region == "bx_bar":
+			data = datasets.bx_population
+			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Bronx"
+		elif region == "mh_bar":
+			data = datasets.mn_population
+			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Manhattan"			
+		elif region == "q_bar":
+			data = datasets.qn_population
+			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Queens"			
+		elif region == "si_bar":
+			data = datasets.si_population
+			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Staten Island"
+		fig = px.bar(
+			data,
+			x = "Neighborhood Type",
+			y = "Population",
+			color = "Neighborhood Type",
+			color_discrete_sequence = ["#6495ED", "#A0BF5F"],
+			title = title
+		)
+		fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20))
+		return fig
+
+# # Show or hide datasets for the bar chart.
+# @app.callback(
+# 	[Output(component_id="bar_chart_filter_example", component_property="children"),
+# 	Output(component_id="bar_chart_dataset", component_property="children")],
+# 	[Input(component_id="bar_chart_show_dataset", component_property="value"),
+# 	Input(component_id="bar_chart_radioitems_region", component_property="value"),
+# 	Input(component_id="bar_chart_radioitems_stacked", component_property="value")]
+# )
+
+# def show_or_hide_b_c_dataset(option_show_or_hide, region, value):
+# 	if option_show_or_hide == "b_c_show_dataset":
+# 		if region == "nyc_es":
+# 			if value == "stacked_bar_chart":
+			
+# 			elif value == "regular_bar_chart":
+				
+"""N/A"""
 # Build the Map
-@app.callback(
-	Output(component_id="map", component_property="figure"),
-	[Input(component_id="slider", component_property="value"),])
+# @app.callback(
+# 	Output(component_id="map", component_property="figure"),
+# 	[Input(component_id="slider", component_property="value"),])
 
-def build_map(year):
-	fig = px.choropleth(
-		locations=["NY"],
-		locationmode = "USA-states",
-		scope = "usa",
-		title = "Work In Progress"
-	)
-	return fig
+# def build_line(year):
+# 	data = datasets.possible_flooding_coverage
+# 	fig = px.scatter(
+# 		data,
+# 		x = "Year",
+# 		y = "Approximate Rise Of Sea Level(Inch)",
+# 		size = "Area(mi²)",
+# 		color = "Year",
+# 		title = "Approximate flood coverage of NYC in a 100-Year Flooding"
+# 	)
+# 	fig.update_layout(title_font=dict(size=20))
+# 	return fig
 
-# Build the Stacked Bar Chart
-@app.callback(
-	Output(component_id="stacked_bar_chart", component_property="figure"),
-	Input(component_id="bar_2010", component_property="value"))
 
-def build_stacked_bar_chart(value):
-	fig = px.bar(
-		title = "Work In Progress"
-	)
-	return fig
 
 app.layout = html.Div(
 	children = [title, tabs]
