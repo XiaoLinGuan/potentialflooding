@@ -48,10 +48,6 @@ sp_data_download_button_style = {
 	"border-Radius": "15px"
 }
 
-bar_button_styles = {"border": "2px solid #aaf0d1"}
-
-pie_button_styles = {"border": "2px solid #66ddaa"}
-
 """
 Title of the dashboard
 """
@@ -346,7 +342,7 @@ Bar Chart and Bubble Chat content
 Bar Chart will be showing the elevation status of NYC
 Bubble Chart will be showing the probability of a rare flooding event 
 """
-tab3 = html.Div([
+# tab3 = html.Div([
 
 	# Bar Chart content
 	# html.Div([
@@ -464,22 +460,22 @@ tab3 = html.Div([
 
 
 	# Bubble Chart content
-	html.Div([
-		# Bubble Chart Description
+# 	html.Div([
+# 		# Bubble Chart Description
 
-		# Bubble Chart Options
-		html.H5("Subcharts")
+# 		# Bubble Chart Options
+# 		html.H5("Subcharts")
 
-	], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"})
-	# End of Bubble Chart Content
-])
+# 	], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"})
+# 	# End of Bubble Chart Content
+# ])
 
 # All the tabs
 tabs = html.Div([
 	dcc.Tabs([ 
 			dcc.Tab(tab1, label="Overview", value="tab_1", style=tab_style, selected_style=selected_tab_style),			
-			dcc.Tab(tab2, label="Line Graph and Scatter Plot", value="tab_2", style=tab_style, selected_style=selected_tab_style),
-			dcc.Tab(tab3, label="Bar Chart and Bubble Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style)
+			dcc.Tab(tab2, label="Line Graph and Scatter Plot", value="tab_2", style=tab_style, selected_style=selected_tab_style)
+			# dcc.Tab(tab3, label="Bar Chart and Bubble Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style)
 		],
 		value="tab_1", # Default tab is Overview 
 		id="tabs"
