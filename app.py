@@ -349,62 +349,62 @@ Bubble Chart will be showing the probability of a rare flooding event
 tab3 = html.Div([
 
 	# Bar Chart content
-	html.Div([
-		# Bar Chart Description 056A54
-		html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
-		html.P(),
+	# html.Div([
+	# 	# Bar Chart Description 056A54
+	# 	html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
+	# 	html.P(),
 
-		html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
+	# 	html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
 
-		# Bar Chart options
-		html.H5("Choose one of the two variables:", style={"color": "#056A54", "margin-left": "10px"}),
-		dbc.RadioItems(
-			options=[
-				{"label": "Elevation Status", "value": "elevation_status"},
-				{"label": "Population", "value": "population"}
-			], 
-			value="elevation_status",
-			inline=True,
-			id="bar_chart_variable",
-			label_checked_style={"color": "#056A54"},
-			style={"margin-left": "10px"}
-		),
-		html.Div([
-			html.H5("Choose a borough:", style={"color": "#339966", "margin-left": "10px"}),
-			dbc.RadioItems(
-				options=[
-					{"label": "NYC", "value": "nyc_bar"},
-					{"label": "Brooklyn", "value": "bk_bar"},
-					{"label": "Bronx", "value": "bx_bar"},
-					{"label": "Manhattan", "value": "mh_bar"},
-					{"label": "Queens", "value": "q_bar"},
-					{"label": "Staten Island", "value": "si_bar"}
-				], 
-				value="nyc_bar",
-				inline=True,
-				id="bar_chart_radioitems_region",
-				label_checked_style={"color": "#339966"},
-				style={"margin-left": "10px"}
-			),
-			html.Div([
-				html.H6("Choose a way to display the bar chart(Only applies to NYC): ",
-					style={"color": "#339933", "margin-left": "10px"}),
-				dbc.RadioItems(
-					options=[
-						{"label": "Stacked", "value": "stacked_bar_chart"},
-						{"label": "Regular", "value": "regular_bar_chart"}
-					],
-					value="regular_bar_chart",
-					inline=True,
-					id="bar_chart_radioitems_stack",
-					label_checked_style={"color": "#339933"},
-					style={"margin-left": "10px", "font-size": "14px"}
-				)
-			], id="stacked_bar_chart_option")
-		]),
+	# 	# Bar Chart options
+	# 	html.H5("Choose one of the two variables:", style={"color": "#056A54", "margin-left": "10px"}),
+	# 	dbc.RadioItems(
+	# 		options=[
+	# 			{"label": "Elevation Status", "value": "elevation_status"},
+	# 			{"label": "Population", "value": "population"}
+	# 		], 
+	# 		value="elevation_status",
+	# 		inline=True,
+	# 		id="bar_chart_variable",
+	# 		label_checked_style={"color": "#056A54"},
+	# 		style={"margin-left": "10px"}
+	# 	),
+	# 	html.Div([
+	# 		html.H5("Choose a borough:", style={"color": "#339966", "margin-left": "10px"}),
+	# 		dbc.RadioItems(
+	# 			options=[
+	# 				{"label": "NYC", "value": "nyc_bar"},
+	# 				{"label": "Brooklyn", "value": "bk_bar"},
+	# 				{"label": "Bronx", "value": "bx_bar"},
+	# 				{"label": "Manhattan", "value": "mh_bar"},
+	# 				{"label": "Queens", "value": "q_bar"},
+	# 				{"label": "Staten Island", "value": "si_bar"}
+	# 			], 
+	# 			value="nyc_bar",
+	# 			inline=True,
+	# 			id="bar_chart_radioitems_region",
+	# 			label_checked_style={"color": "#339966"},
+	# 			style={"margin-left": "10px"}
+	# 		),
+	# 		html.Div([
+	# 			html.H6("Choose a way to display the bar chart(Only applies to NYC): ",
+	# 				style={"color": "#339933", "margin-left": "10px"}),
+	# 			dbc.RadioItems(
+	# 				options=[
+	# 					{"label": "Stacked", "value": "stacked_bar_chart"},
+	# 					{"label": "Regular", "value": "regular_bar_chart"}
+	# 				],
+	# 				value="regular_bar_chart",
+	# 				inline=True,
+	# 				id="bar_chart_radioitems_stack",
+	# 				label_checked_style={"color": "#339933"},
+	# 				style={"margin-left": "10px", "font-size": "14px"}
+	# 			)
+	# 		], id="stacked_bar_chart_option")
+	# 	]),
 		
-		# Bar Chart
-		dcc.Graph(id="bar_chart")
+	# 	# Bar Chart
+	# 	dcc.Graph(id="bar_chart")
 
 		# # Options to show or hide bar chart dataset.
 		# dbc.RadioItems(
@@ -459,7 +459,7 @@ tab3 = html.Div([
 		# 	style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		# ])
 
-	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"}),
+	# ], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"}),
 	# End of Bar Chat Content
 
 
