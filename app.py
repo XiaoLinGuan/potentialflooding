@@ -404,60 +404,60 @@ tab3 = html.Div([
 		]),
 		
 		# Bar Chart
-		dcc.Graph(id="bar_chart"),
+		dcc.Graph(id="bar_chart")
 
-		# Options to show or hide bar chart dataset.
-		dbc.RadioItems(
-			options=[
-				{"label": "Show Dataset", "value": "b_c_show_dataset"},
-				{"label": "Hide Dataset", "value": "b_c_hide_dataset"}
-			],
-			value="b_c_hide_dataset",
-			inline=True,
-			id="bar_chart_show_dateset",
-			label_style={"font-size": "20px", "color": "#056A54"},
-			style={"margin-left": "10px"}
-		),
+		# # Options to show or hide bar chart dataset.
+		# dbc.RadioItems(
+		# 	options=[
+		# 		{"label": "Show Dataset", "value": "b_c_show_dataset"},
+		# 		{"label": "Hide Dataset", "value": "b_c_hide_dataset"}
+		# 	],
+		# 	value="b_c_hide_dataset",
+		# 	inline=True,
+		# 	id="bar_chart_show_dateset",
+		# 	label_style={"font-size": "20px", "color": "#056A54"},
+		# 	style={"margin-left": "10px"}
+		# )
 
-		html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
+		# html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
 
-		# Scatter Plot Dataset
+		# Bar Chart Dataset
 		# By default, the dataset is hidden so that user can focus on the graph
-		html.Div(id="bar_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
+		# html.Div(id="bar_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 	
 		# Dropdown menu for users to download datasets used in line graph
-		html.Div([
-			html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
-			html.Div([
-				dcc.Dropdown(
-					options=[
-						{"label": "nyc_elevation_status_count.csv", "value": "nyc_esc1"},
-						{"label": "nyc_elevation_status_count_stacked.csv", "value": "nyc_esc2"},
-						{"label": "brooklyn_elevation_status_count.csv", "value": "bk_esc"},
-						{"label": "bronx_elevation_status_count.csv", "value": "bx_esc"},
-						{"label": "manhattan_elevation_status_count.csv", "value": "mh_esc"},
-						{"label": "queens_elevation_status_count.csv", "value": "q_esc"},
-						{"label": "staten_island_elevation_status_count.csv", "value": "si_esc"},
-					],
-					placeholder="Pick a dataset",
-					id="bar_chart_download_option",
-					style={"background-color": "#E3EDDD", "border-radius": "10px", "color": "#056A54"}
-				),
-				dcc.Download(id="bar_chart_download_data")
-			],style={"margin-left": "10px", "margin-right": "950px"}),
-			html.H6(
-				html.I([
-					"""
-					The datasets are cleaned and modified for plotting. To read or download 
-					the original datasets, please click on 
-					""", 
-					html.B("Overview"), 
-					""", scroll to the bottom of the page, and click on any links under Data 
-					Sources. Sorry for the inconvenience.
-					"""
-				]),
-			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
-		])
+		# html.Div([
+		# 	html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
+		# 	html.Div([
+		# 		dcc.Dropdown(
+		# 			options=[
+		# 				{"label": "nyc_elevation_status_count.csv", "value": "nyc_esc1"},
+		# 				{"label": "nyc_elevation_status_count_stacked.csv", "value": "nyc_esc2"},
+		# 				{"label": "brooklyn_elevation_status_count.csv", "value": "bk_esc"},
+		# 				{"label": "bronx_elevation_status_count.csv", "value": "bx_esc"},
+		# 				{"label": "manhattan_elevation_status_count.csv", "value": "mh_esc"},
+		# 				{"label": "queens_elevation_status_count.csv", "value": "q_esc"},
+		# 				{"label": "staten_island_elevation_status_count.csv", "value": "si_esc"},
+		# 			],
+		# 			placeholder="Pick a dataset",
+		# 			id="bar_chart_download_option",
+		# 			style={"background-color": "#E3EDDD", "border-radius": "10px", "color": "#056A54"}
+		# 		),
+		# 		dcc.Download(id="bar_chart_download_data")
+		# 	],style={"margin-left": "10px", "margin-right": "950px"}),
+		# 	html.H6(
+		# 		html.I([
+		# 			"""
+		# 			The datasets are cleaned and modified for plotting. To read or download 
+		# 			the original datasets, please click on 
+		# 			""", 
+		# 			html.B("Overview"), 
+		# 			""", scroll to the bottom of the page, and click on any links under Data 
+		# 			Sources. Sorry for the inconvenience.
+		# 			"""
+		# 		]),
+		# 	style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
+		# ])
 
 	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"}),
 	# End of Bar Chat Content
@@ -470,33 +470,8 @@ tab3 = html.Div([
 		# Bubble Chart Options
 		html.H5("Subcharts")
 
-	], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"}),
+	], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"})
 	# End of Bubble Chart Content
-
-	# Map options
-	dcc.Slider(
-	min=2010, 
-	max=2050, 
-	step=None,
-	marks={
-		2010: "2010",
-		2020: "2020",
-		2030: "2030",
-		2040: "2040",
-		2050: "2050"
-	},
-	value=2020,
-	included=False,
-	id="slider"),
-
-	# Map 
-	html.H5("Choose a "),
-	dbc.RadioItems(
-		options=[
-			{"label": ""}
-		]
-	),
-	dcc.Graph(id="map")
 ])
 
 # All the tabs
