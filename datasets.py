@@ -343,131 +343,120 @@ Bar Chart will be showing the elevation status of NYC
 Bubble Chart will be showing the probability of a rare flooding event 
 """
 tab3 = html.Div([
-
-	# Bar Chart content
-	html.Div([
-		# Bar Chart Description 056A54
-		html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
-		# html.P(),
-
-		html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
-
-		# Bar Chart options
-		html.H5("Choose one of the two variables:", style={"color": "#056A54", "margin-left": "10px"}),
-		dbc.RadioItems(
-			options=[
-				{"label": "Elevation Status", "value": "elevation_status"},
-				{"label": "Population", "value": "population"}
-			], 
-			value="elevation_status",
-			inline=True,
-			id="bar_chart_variable",
-			label_checked_style={"color": "#056A54"},
-			style={"margin-left": "10px"}
-		),
-		html.Div([
-			html.H5("Choose a borough:", style={"color": "#339966", "margin-left": "10px"}),
-			dbc.RadioItems(
-				options=[
-					{"label": "NYC", "value": "nyc_bar"},
-					{"label": "Brooklyn", "value": "bk_bar"},
-					{"label": "Bronx", "value": "bx_bar"},
-					{"label": "Manhattan", "value": "mh_bar"},
-					{"label": "Queens", "value": "q_bar"},
-					{"label": "Staten Island", "value": "si_bar"}
-				], 
-				value="nyc_bar",
-				inline=True,
-				id="bar_chart_radioitems_region",
-				label_checked_style={"color": "#339966"},
-				style={"margin-left": "10px"}
-			),
-			html.Div([
-				html.H6("Choose a way to display the bar chart(Only applies to NYC): ",
-					style={"color": "#339933", "margin-left": "10px"}),
-				dbc.RadioItems(
-					options=[
-						{"label": "Stacked", "value": "stacked_bar_chart"},
-						{"label": "Regular", "value": "regular_bar_chart"}
-					],
-					value="regular_bar_chart",
-					inline=True,
-					id="bar_chart_radioitems_stack",
-					label_checked_style={"color": "#339933"},
-					style={"margin-left": "10px", "font-size": "14px"}
-				)
-			], id="stacked_bar_chart_option")
-		]),
-		
-		# Bar Chart
-		dcc.Graph(id="bar_chart"),
-
-		# Options to show or hide bar chart dataset.
-		dbc.RadioItems(
-			options=[
-				{"label": "Show Dataset", "value": "b_c_show_dataset"},
-				{"label": "Hide Dataset", "value": "b_c_hide_dataset"}
-			],
-			value="b_c_hide_dataset",
-			inline=True,
-			id="bar_chart_show_dateset",
-			label_style={"font-size": "20px", "color": "#056A54"},
-			style={"margin-left": "10px"}
-		),
-
-		html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
-
-		# Bar Chart Dataset
-		# By default, the dataset is hidden so that user can focus on the graph
-		html.Div(id="bar_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
-	
-		# Dropdown menu for users to download datasets used in line graph
-		html.Div([
-			html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
-			html.Div([
-				dcc.Dropdown(
-					options=[
-						{"label": "nyc_elevation_status_count.csv", "value": "nyc_esc1"},
-						{"label": "nyc_elevation_status_count_stacked.csv", "value": "nyc_esc2"},
-						{"label": "brooklyn_elevation_status_count.csv", "value": "bk_esc"},
-						{"label": "bronx_elevation_status_count.csv", "value": "bx_esc"},
-						{"label": "manhattan_elevation_status_count.csv", "value": "mh_esc"},
-						{"label": "queens_elevation_status_count.csv", "value": "q_esc"},
-						{"label": "staten_island_elevation_status_count.csv", "value": "si_esc"},
-					],
-					placeholder="Pick a dataset",
-					id="bar_chart_download_option",
-					style={"background-color": "#E3EDDD", "border-radius": "10px", "color": "#056A54"}
-				),
-				dcc.Download(id="bar_chart_download_data")
-			],style={"margin-left": "10px", "margin-right": "950px"}),
-			html.H6(
-				html.I([
-					"""
-					The datasets are cleaned and modified for plotting. To read or download 
-					the original datasets, please click on 
-					""", 
-					html.B("Overview"), 
-					""", scroll to the bottom of the page, and click on any links under Data 
-					Sources. Sorry for the inconvenience.
-					"""
-				]),
-			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
-		])
-
-	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"})
-	# End of Bar Chat Content
-
-
-	# # Bubble Chart content
+		"Third Tap?"
+	# # Bar Chart content
 	# html.Div([
-	# 	# Bubble Chart Description
+	# 	# Bar Chart Description 056A54
+	# 	html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
+	# 	# html.P(),
 
-	# 	# Bubble Chart Options
-	# 	html.H5("Subcharts")
+	# 	html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
 
-	# ], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"})
-	# # End of Bubble Chart Content
+	# 	# Bar Chart options
+	# 	html.H5("Choose one of the two variables:", style={"color": "#056A54", "margin-left": "10px"}),
+	# 	dbc.RadioItems(
+	# 		options=[
+	# 			{"label": "Elevation Status", "value": "elevation_status"},
+	# 			{"label": "Population", "value": "population"}
+	# 		], 
+	# 		value="elevation_status",
+	# 		inline=True,
+	# 		id="bar_chart_variable",
+	# 		label_checked_style={"color": "#056A54"},
+	# 		style={"margin-left": "10px"}
+	# 	),
+	# 	html.Div([
+	# 		html.H5("Choose a borough:", style={"color": "#339966", "margin-left": "10px"}),
+	# 		dbc.RadioItems(
+	# 			options=[
+	# 				{"label": "NYC", "value": "nyc_bar"},
+	# 				{"label": "Brooklyn", "value": "bk_bar"},
+	# 				{"label": "Bronx", "value": "bx_bar"},
+	# 				{"label": "Manhattan", "value": "mh_bar"},
+	# 				{"label": "Queens", "value": "q_bar"},
+	# 				{"label": "Staten Island", "value": "si_bar"}
+	# 			], 
+	# 			value="nyc_bar",
+	# 			inline=True,
+	# 			id="bar_chart_radioitems_region",
+	# 			label_checked_style={"color": "#339966"},
+	# 			style={"margin-left": "10px"}
+	# 		),
+	# 		html.Div([
+	# 			html.H6("Choose a way to display the bar chart(Only applies to NYC): ",
+	# 				style={"color": "#339933", "margin-left": "10px"}),
+	# 			dbc.RadioItems(
+	# 				options=[
+	# 					{"label": "Stacked", "value": "stacked_bar_chart"},
+	# 					{"label": "Regular", "value": "regular_bar_chart"}
+	# 				],
+	# 				value="regular_bar_chart",
+	# 				inline=True,
+	# 				id="bar_chart_radioitems_stack",
+	# 				label_checked_style={"color": "#339933"},
+	# 				style={"margin-left": "10px", "font-size": "14px"}
+	# 			)
+	# 		], id="stacked_bar_chart_option")
+	# 	]),
+		
+	# 	# Bar Chart
+	# 	dcc.Graph(id="bar_chart"),
+
+	# 	# Options to show or hide bar chart dataset.
+	# 	dbc.RadioItems(
+	# 		options=[
+	# 			{"label": "Show Dataset", "value": "b_c_show_dataset"},
+	# 			{"label": "Hide Dataset", "value": "b_c_hide_dataset"}
+	# 		],
+	# 		value="b_c_hide_dataset",
+	# 		inline=True,
+	# 		id="bar_chart_show_dateset",
+	# 		label_style={"font-size": "20px", "color": "#056A54"},
+	# 		style={"margin-left": "10px"}
+	# 	),
+
+	# 	html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
+
+	# 	# Bar Chart Dataset
+	# 	# By default, the dataset is hidden so that user can focus on the graph
+	# 	html.Div(id="bar_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
+	
+	# 	# Dropdown menu for users to download datasets used in line graph
+	# 	html.Div([
+	# 		html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
+	# 		html.Div([
+	# 			dcc.Dropdown(
+	# 				options=[
+	# 					{"label": "nyc_elevation_status_count.csv", "value": "nyc_esc1"},
+	# 					{"label": "nyc_elevation_status_count_stacked.csv", "value": "nyc_esc2"},
+	# 					{"label": "brooklyn_elevation_status_count.csv", "value": "bk_esc"},
+	# 					{"label": "bronx_elevation_status_count.csv", "value": "bx_esc"},
+	# 					{"label": "manhattan_elevation_status_count.csv", "value": "mh_esc"},
+	# 					{"label": "queens_elevation_status_count.csv", "value": "q_esc"},
+	# 					{"label": "staten_island_elevation_status_count.csv", "value": "si_esc"},
+	# 				],
+	# 				placeholder="Pick a dataset",
+	# 				id="bar_chart_download_option",
+	# 				style={"background-color": "#E3EDDD", "border-radius": "10px", "color": "#056A54"}
+	# 			),
+	# 			dcc.Download(id="bar_chart_download_data")
+	# 		],style={"margin-left": "10px", "margin-right": "950px"}),
+	# 		html.H6(
+	# 			html.I([
+	# 				"""
+	# 				The datasets are cleaned and modified for plotting. To read or download 
+	# 				the original datasets, please click on 
+	# 				""", 
+	# 				html.B("Overview"), 
+	# 				""", scroll to the bottom of the page, and click on any links under Data 
+	# 				Sources. Sorry for the inconvenience.
+	# 				"""
+	# 			]),
+	# 		style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
+	# 	])
+
+	# ], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"})
+	# End of Bar Chat Content
 ])
 
 # All the tabs
