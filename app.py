@@ -794,17 +794,17 @@ Including:
 
 """
 # Modify the stacked bar chart option.
-@app.callback(
-	Output(component_id="stacked_bar_chart_option", component_property="style"),
-	[Input(component_id="bar_chart_variable", component_property="value"),
-	Input(component_id="bar_chart_radioitems_region", component_property="value")])
+# @app.callback(
+# 	Output(component_id="stacked_bar_chart_option", component_property="style"),
+# 	[Input(component_id="bar_chart_variable", component_property="value"),
+# 	Input(component_id="bar_chart_radioitems_region", component_property="value")])
 
-def modify_stacked_bar_chart_option(bar_variable, region_option):
-	if bar_variable == "elevation_status": 
-		if region_option != "nyc_bar":
-			return {"display": "none"}
-	elif bar_variable == "population":
-		return {"display": "none"}
+# def modify_stacked_bar_chart_option(bar_variable, region_option):
+# 	if bar_variable == "elevation_status": 
+# 		if region_option != "nyc_bar":
+# 			return {"display": "none"}
+# 	elif bar_variable == "population":
+# 		return {"display": "none"}
 
 # # Build Bar Chart.
 # @app.callback(
