@@ -773,116 +773,116 @@ def download_line_graph_dataset(scatter_plot_download_option):
 		return dcc.send_data_frame((datasets.tri_state_region_and_nyc_count).to_csv, "tri_state_and_nyc_landfall_count.csv")	
 """End of Scatter Plot functions"""
 
-"""
-Bar Chart functions
-Including:
+# """
+# Bar Chart functions
+# Including:
 
-"""
-# Modify the stacked bar chart option.
-@app.callback(
-	Output(component_id="stacked_bar_chart_option", component_property="style"),
-	[Input(component_id="bar_chart_variable", component_property="value"),
-	Input(component_id="bar_chart_radioitems_region", component_property="value")])
+# """
+# # Modify the stacked bar chart option.
+# @app.callback(
+# 	Output(component_id="stacked_bar_chart_option", component_property="style"),
+# 	[Input(component_id="bar_chart_variable", component_property="value"),
+# 	Input(component_id="bar_chart_radioitems_region", component_property="value")])
 
-def modify_stacked_bar_chart_option(bar_variable, region_option):
-	if bar_variable == "elevation_status": 
-		if region_option != "nyc_bar":
-			return {"display": "none"}
-	elif bar_variable == "population":
-		return {"display": "none"}
+# def modify_stacked_bar_chart_option(bar_variable, region_option):
+# 	if bar_variable == "elevation_status": 
+# 		if region_option != "nyc_bar":
+# 			return {"display": "none"}
+# 	elif bar_variable == "population":
+# 		return {"display": "none"}
 
-# Build Bar Chart.
-@app.callback(
-	Output(component_id="bar_chart", component_property="figure"),
-	[Input(component_id="bar_chart_variable", component_property="value"),
-	Input(component_id="bar_chart_radioitems_region", component_property="value"),
-	Input(component_id="bar_chart_radioitems_stack", component_property="value")])
+# # Build Bar Chart.
+# @app.callback(
+# 	Output(component_id="bar_chart", component_property="figure"),
+# 	[Input(component_id="bar_chart_variable", component_property="value"),
+# 	Input(component_id="bar_chart_radioitems_region", component_property="value"),
+# 	Input(component_id="bar_chart_radioitems_stack", component_property="value")])
 
-def build_bar_chart(bar_variable, region, value):
-	if bar_variable == "elevation_status":
-		if region == "nyc_bar":
-			if value == "stacked_bar_chart":
-				data = datasets.nyc_elevation_status2
-				fig = px.bar(
-					data,
-					x = "Region",
-					y = ["Extremely Low", "Low", "Very Low", "Average"],
-					color_discrete_sequence = ["#FC6659", "#F7A543", "#E1C739", "#A0BF5F"],
-					title = "NYC Elevation Status"
-				)
-				fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20),
-					legend=dict(title="Elevation Status")
-				)
-				fig.update_yaxes(title_text="Count")
-				return fig
-			elif value == "regular_bar_chart":
-				data = datasets.nyc_elevation_status1
-				title = "NYC Elevation Status"
-		elif region == "bk_bar":
-			data = datasets.bk_elevation_status
-			title = "Brooklyn Elevation Status"
-		elif region == "mh_bar":
-			data = datasets.mh_elevation_status
-			title = "Manhattan Elevation Status"
-		elif region == "q_bar":
-			data = datasets.q_elevation_status
-			title = "Queens Elevation Status"
-		elif region == "bx_bar":
-			data = datasets.bx_elevation_status
-			title = "Bronx Elevation Status"
-		elif region == "si_bar":
-			data = datasets.si_elevation_status
-			title = "Staten Island Elevation Status"
-		fig = px.bar(
-			data,
-			x = "Elevation Status",
-			y = "Count",
-			color = "Elevation Status",
-			color_discrete_sequence = ["#FC6659", "#F7A543", "#E1C739", "#A0BF5F"],
-			title = title
-		)
-		fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20))
-		return fig		
-	else:
-		if region == "nyc_bar":
-			data = datasets.nyc_population
-			fig = px.bar(
-				data,
-				x = "Region",
-				y = ["Coastal Neighborhood", "Non-Coastal Neighborhood"],
-				color_discrete_sequence = ["#6495ED", "#A0BF5F"],
-				title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in NYC"
-			)
-			fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20),
-				legend=dict(title="Neighborhood Type")
-			)
-			fig.update_yaxes(title_text="Population")
-			return fig
-		elif region == "bk_bar":
-			data = datasets.bk_population
-			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Brooklyn"
-		elif region == "bx_bar":
-			data = datasets.bx_population
-			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Bronx"
-		elif region == "mh_bar":
-			data = datasets.mn_population
-			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Manhattan"			
-		elif region == "q_bar":
-			data = datasets.qn_population
-			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Queens"			
-		elif region == "si_bar":
-			data = datasets.si_population
-			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Staten Island"
-		fig = px.bar(
-			data,
-			x = "Neighborhood Type",
-			y = "Population",
-			color = "Neighborhood Type",
-			color_discrete_sequence = ["#6495ED", "#A0BF5F"],
-			title = title
-		)
-		fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20))
-		return fig
+# def build_bar_chart(bar_variable, region, value):
+# 	if bar_variable == "elevation_status":
+# 		if region == "nyc_bar":
+# 			if value == "stacked_bar_chart":
+# 				data = datasets.nyc_elevation_status2
+# 				fig = px.bar(
+# 					data,
+# 					x = "Region",
+# 					y = ["Extremely Low", "Low", "Very Low", "Average"],
+# 					color_discrete_sequence = ["#FC6659", "#F7A543", "#E1C739", "#A0BF5F"],
+# 					title = "NYC Elevation Status"
+# 				)
+# 				fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20),
+# 					legend=dict(title="Elevation Status")
+# 				)
+# 				fig.update_yaxes(title_text="Count")
+# 				return fig
+# 			elif value == "regular_bar_chart":
+# 				data = datasets.nyc_elevation_status1
+# 				title = "NYC Elevation Status"
+# 		elif region == "bk_bar":
+# 			data = datasets.bk_elevation_status
+# 			title = "Brooklyn Elevation Status"
+# 		elif region == "mh_bar":
+# 			data = datasets.mh_elevation_status
+# 			title = "Manhattan Elevation Status"
+# 		elif region == "q_bar":
+# 			data = datasets.q_elevation_status
+# 			title = "Queens Elevation Status"
+# 		elif region == "bx_bar":
+# 			data = datasets.bx_elevation_status
+# 			title = "Bronx Elevation Status"
+# 		elif region == "si_bar":
+# 			data = datasets.si_elevation_status
+# 			title = "Staten Island Elevation Status"
+# 		fig = px.bar(
+# 			data,
+# 			x = "Elevation Status",
+# 			y = "Count",
+# 			color = "Elevation Status",
+# 			color_discrete_sequence = ["#FC6659", "#F7A543", "#E1C739", "#A0BF5F"],
+# 			title = title
+# 		)
+# 		fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20))
+# 		return fig		
+# 	else:
+# 		if region == "nyc_bar":
+# 			data = datasets.nyc_population
+# 			fig = px.bar(
+# 				data,
+# 				x = "Region",
+# 				y = ["Coastal Neighborhood", "Non-Coastal Neighborhood"],
+# 				color_discrete_sequence = ["#6495ED", "#A0BF5F"],
+# 				title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in NYC"
+# 			)
+# 			fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20),
+# 				legend=dict(title="Neighborhood Type")
+# 			)
+# 			fig.update_yaxes(title_text="Population")
+# 			return fig
+# 		elif region == "bk_bar":
+# 			data = datasets.bk_population
+# 			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Brooklyn"
+# 		elif region == "bx_bar":
+# 			data = datasets.bx_population
+# 			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Bronx"
+# 		elif region == "mh_bar":
+# 			data = datasets.mn_population
+# 			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Manhattan"			
+# 		elif region == "q_bar":
+# 			data = datasets.qn_population
+# 			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Queens"			
+# 		elif region == "si_bar":
+# 			data = datasets.si_population
+# 			title = "Coastal Neighborhood Population vs. Non-Coastal Neighborhood Population in Staten Island"
+# 		fig = px.bar(
+# 			data,
+# 			x = "Neighborhood Type",
+# 			y = "Population",
+# 			color = "Neighborhood Type",
+# 			color_discrete_sequence = ["#6495ED", "#A0BF5F"],
+# 			title = title
+# 		)
+# 		fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20))
+# 		return fig
 
 # # Show or hide datasets for the bar chart.
 # @app.callback(
