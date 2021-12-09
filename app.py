@@ -468,11 +468,7 @@ tab3 = html.Div([
 		# Bubble Chart Description
 
 		# Bubble Chart Options
-		html.H5("Subcharts"),
-		dbc.Row([
-			dbc.Col(dcc.Graph(),width=6),
-			dbc.Col(dcc.Graph(),width=6)
-		])
+		html.H5("Subcharts")
 
 	], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"}),
 	# End of Bubble Chart Content
@@ -945,22 +941,22 @@ def build_bar_chart(bar_variable, region, value):
 				
 """N/A"""
 # Build the Map
-@app.callback(
-	Output(component_id="map", component_property="figure"),
-	[Input(component_id="slider", component_property="value"),])
+# @app.callback(
+# 	Output(component_id="map", component_property="figure"),
+# 	[Input(component_id="slider", component_property="value"),])
 
-def build_line(year):
-	data = datasets.possible_flooding_coverage
-	fig = px.scatter(
-		data,
-		x = "Year",
-		y = "Approximate Rise Of Sea Level(Inch)",
-		size = "Area(mi²)",
-		color = "Year",
-		title = "Approximate flood coverage of NYC in a 100-Year Flooding"
-	)
-	fig.update_layout(title_font=dict(size=20))
-	return fig
+# def build_line(year):
+# 	data = datasets.possible_flooding_coverage
+# 	fig = px.scatter(
+# 		data,
+# 		x = "Year",
+# 		y = "Approximate Rise Of Sea Level(Inch)",
+# 		size = "Area(mi²)",
+# 		color = "Year",
+# 		title = "Approximate flood coverage of NYC in a 100-Year Flooding"
+# 	)
+# 	fig.update_layout(title_font=dict(size=20))
+# 	return fig
 
 
 
