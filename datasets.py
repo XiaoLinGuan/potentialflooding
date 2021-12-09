@@ -348,7 +348,7 @@ tab3 = html.Div([
 	html.Div([
 		# Bar Chart Description 056A54
 		html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
-		html.P(),
+		# html.P(),
 
 		html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
 
@@ -413,7 +413,7 @@ tab3 = html.Div([
 			id="bar_chart_show_dateset",
 			label_style={"font-size": "20px", "color": "#056A54"},
 			style={"margin-left": "10px"}
-		)
+		),
 
 		html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
 
@@ -455,19 +455,19 @@ tab3 = html.Div([
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
 
-	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"}),
+	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"})
 	# End of Bar Chat Content
 
 
-	# Bubble Chart content
-	html.Div([
-		# Bubble Chart Description
+	# # Bubble Chart content
+	# html.Div([
+	# 	# Bubble Chart Description
 
-		# Bubble Chart Options
-		html.H5("Subcharts")
+	# 	# Bubble Chart Options
+	# 	html.H5("Subcharts")
 
-	], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"})
-	# End of Bubble Chart Content
+	# ], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"})
+	# # End of Bubble Chart Content
 ])
 
 # All the tabs
