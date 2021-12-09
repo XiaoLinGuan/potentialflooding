@@ -344,7 +344,7 @@ Bubble Chart will be showing the probability of a rare flooding event
 """
 tab3 = html.Div([
 
-	Bar Chart content
+	# Bar Chart content
 	html.Div([
 		# Bar Chart Description 056A54
 		html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
@@ -789,7 +789,7 @@ Bar Chart functions
 Including:
 
 """
-Modify the stacked bar chart option.
+# Modify the stacked bar chart option.
 @app.callback(
 	Output(component_id="stacked_bar_chart_option", component_property="style"),
 	[Input(component_id="bar_chart_variable", component_property="value"),
