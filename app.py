@@ -67,7 +67,7 @@ title = html.Div([
 
 """
 Tab1
-Overview content
+Introduction content
 Descriprtion of the web app and data sources
 """
 tab1 = html.Div([
@@ -324,7 +324,8 @@ tab2 = html.Div([
 Tab3
 Bar Chart and Bubble Chat content
 Bar Chart will be showing the elevation status and population of NYC
-Bubble Chart will be showing the probability of a rare flooding event 
+Bubble Chart will be showing the probability of a rare flooding event occur
+in the future and an approximate land coverage(in square miles) by the flood
 """
 tab3 = html.Div([
 	# Bar Chart content
@@ -428,7 +429,7 @@ tab3 = html.Div([
 		# Bar Chart
 		dcc.Graph(id="bar_chart"),
 
-		# Options to show or hide bar chart dataset.
+		# Options to show or hide bar chart dataset
 		dbc.RadioItems(
 			options=[
 				{"label": "Show Dataset", "value": "b_c_show_dataset"},
@@ -450,7 +451,7 @@ tab3 = html.Div([
 	
 		# Dropdown menu for users to download datasets used in bar chart
 		html.Div([
-			html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
+			html.H6(html.I(html.B("Download datasets used in bar chart: ")), style={"margin-left": "10px"}),
 			html.Div([
 				dcc.Dropdown(
 					options=[
@@ -493,8 +494,99 @@ tab3 = html.Div([
 
 	# Bubble Chart content
 	html.Div([
-		html.H4("")
-	])
+		# Bubble Chart Description
+		html.H4("Possible Flood Coverage",  
+			style={"color": "#053845", "margin-left": "10px"}),
+		html.P([
+			"""
+			Given almost half the population lives in coastal areas, 
+			NYC will face another challenge when rare and severe flooding 
+			such as the ones that occur approximately once in a hundred years 
+			or once in five hundred years becomes more frequent. The following 
+			bubble chart represents the potential flooding coverage during a 
+			100-year flood in five different years. The federal emergency 
+			management agency initially developed this model to improve our 
+			city's urban planning by keeping people aware of places with higher 
+			exposure to flooding than other places. But this model only takes 
+			sea level as the reason that it will cause flooding. It ignores many 
+			different factors such as heavy rain, broken drainage system, lack 
+			of vegetation. Many had turned to other models for the prediction 
+			of flooding. However, this model still covers the overall trend of 
+			potential flood coverage in NYC, and we can see how a few inches of 
+			sea-level rise would damage NYC. 
+			"""
+		], style={"color": "#053845", "text-align": "justify", "margin-left": "10px", "margin-right": "10px"}),
+		html.P([
+			"""
+			At first, when I plotted the data points onto the chart, I didn't 
+			think that the flood coverage changed drastically because the data 
+			points didn't seem to increase a lot in size. Then, I checked their 
+			possible coverage area. After searching NYC's land area, I realize 
+			that if NYC's sea-level trend follows this model, we will be left 
+			with approximately two-thirds of NYC's land area by the end of the 
+			century. NYC only has a land area of roughly 302 square miles. In 
+			2050, if a 100-year flood occur, 72 square miles of NYC would 
+			experience flooding. That's more than one-fourth of NYC's land area. 
+			And if we move onto the last data point on this chart, with a 75 inches 
+			increase in sea level, a 100-year flood would flood 91 square miles of NYC, 
+			which is almost one-third of the land area. We know that there are a 
+			lot of residents living in coastal neighborhoods, and this will be a 
+			disaster for most people.  
+			"""
+		], style={"color": "#053845", "text-align": "justify", "margin-left": "10px", "margin-right": "10px"}),
+
+		html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
+		
+		dcc.Graph(id="bubble_chart"),
+
+		# Options to show or hide bubble chart dataset
+		dbc.RadioItems(
+			options=[
+				{"label": "Show Dataset", "value": "bub_c_show_dataset"},
+				{"label": "Hide Dataset", "value": "bub_c_hide_dataset"}
+			],
+			value="bub_c_hide_dataset",
+			inline=True,
+			id="bubble_chart_show_dataset",
+			label_style={"font-size": "20px", "color": "#053845"},
+			style={"margin-left": "10px"}
+		),
+
+		# Examples of applying filter on the dataset
+		html.Div(id="bubble_chart_filter_example", style={"margin-left": "10px"}),
+
+		# Bubble Chart Dataset
+		# By default, the dataset is hidden so that user can focus on the chart
+		html.Div(id="bubble_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
+		
+		# Dropdown menu for users to download dataset used in bubble chart
+		html.Div([
+			html.H6(html.I(html.B("Download datasets used in bubble chart: ")), style={"margin-left": "10px"}),
+			html.Div([
+				dcc.Dropdown(
+					options=[
+						{"label": "100_year_flood_data.csv", "value": "flood_data"}
+					],
+					placeholder="Pick a dataset",
+					id="bubble_chart_download_option",
+					style={"background-color": "#C9EAF2", "border-radius": "10px", "color": "#0067A5"}
+				),
+				dcc.Download(id="bubble_chart_download_data")
+			],style={"margin-left": "10px", "margin-right": "900px"}),
+			html.H6(
+				html.I([
+					"""
+					The datasets are cleaned and modified for plotting. To read or download 
+					the original datasets, please click on 
+					""", 
+					html.B("Conclusion"), 
+					""", scroll to the bottom of the page, and click on any links under Data 
+					Sources. Sorry for the inconvenience.
+					"""
+				]),
+			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
+		])
+	], style={"background-color": "#97D4DE", "border": "5px solid white", "border-radius": "20px"})
 ])
 # End of Tab3
 
@@ -530,7 +622,7 @@ tab4 = html.Div([
 # All the tabs
 tabs = html.Div([
 	dcc.Tabs([ 
-			dcc.Tab(tab1, label="Overview", value="tab_1", style=tab_style, selected_style=selected_tab_style),			
+			dcc.Tab(tab1, label="Introduction", value="tab_1", style=tab_style, selected_style=selected_tab_style),			
 			dcc.Tab(tab2, label="Line Graph and Scatter Plot", value="tab_2", style=tab_style, selected_style=selected_tab_style),
 			dcc.Tab(tab3, label="Bar Chart and Bubble Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style),
 			dcc.Tab(tab4, label="Conclusion", value="tab_4", style=tab_style, selected_style=selected_tab_style)
@@ -833,7 +925,7 @@ def show_or_hide_sp_dataset(option_show_or_hide, region):
 	Output(component_id="scatter_plot_download_data", component_property="data"),
 	Input(component_id="scatter_plot_download_option", component_property="value"))	
 
-def download_line_graph_dataset(scatter_plot_download_option):
+def download_scatter_plot_dataset(scatter_plot_download_option):
 	if scatter_plot_download_option == "atlantic_ocean_dataset":
 		return dcc.send_data_frame((datasets.atlantic_ocean_cyclones_count).to_csv, "atlantic_ocean_cyclones_count.csv")
 	elif scatter_plot_download_option == "east_coast_landfall_dataset":
@@ -1142,13 +1234,14 @@ def show_or_hide_bc_dataset(option_show_or_hide, variable, region, chart):
 			columns=[{"name": i, "id": i} for i in (data.columns)],
 			page_size=6,
 			style_header={"background-color": "#76AD87", "border": "1px solid #405A45", "font-size": "14px"},
-			style_cell={"background-color": "#C1DBC4", "border": "1px solid #405A45", "font-size": "14px"}
+			style_cell={"background-color": "#ADC4B0", "border": "1px solid #405A45", "font-size": "14px"}
 		)
 		return filter_example, dataset
 	else:
 		message1 = html.H6("Dataset is hidden.", style={"margin-left": "10px"})
 		message2 = html.H6(["To view the dataset, please click on ", html.U("Show Dataset.")], style={"margin-left": "10px"})
 		return message1, message2
+
 # Download datasets that are used in bar chart.
 @app.callback(
 	Output(component_id="bar_chart_download_data", component_property="data"),
@@ -1181,43 +1274,107 @@ def download_bar_chart_dataset(bar_chart_download_option):
 		return dcc.send_data_frame((datasets.qn_population).to_csv, "queens_coastal_vs_non_coastal.csv")
 	elif bar_chart_download_option == "si_p":
 		return dcc.send_data_frame((datasets.si_population).to_csv, "si_population_vs_non_coastal.csv")
+"""End of Bar Chart functions"""
 
-# # Show or hide datasets for the bar chart.
-# @app.callback(
-# 	[Output(component_id="bar_chart_filter_example", component_property="children"),
-# 	Output(component_id="bar_chart_dataset", component_property="children")],
-# 	[Input(component_id="bar_chart_show_dataset", component_property="value"),
-# 	Input(component_id="bar_chart_radioitems_region", component_property="value"),
-# 	Input(component_id="bar_chart_radioitems_stacked", component_property="value")]
-# )
+"""
+Bubble Chart functions
+Including:
+	build bubble chart,
+	show or hide bubble chart dataset,
+	options to download the dataset
+"""
+# Build the bubble chart.
+@app.callback(
+	Output(component_id="bubble_chart", component_property="figure"),
+	Input(component_id="bubble_chart_show_dataset", component_property="value"))
 
-# def show_or_hide_b_c_dataset(option_show_or_hide, region, value):
-# 	if option_show_or_hide == "b_c_show_dataset":
-# 		if region == "nyc_es":
-# 			if value == "stacked_bar_chart":
-			
-# 			elif value == "regular_bar_chart":
-				
-"""N/A"""
-# Build the Map
-# @app.callback(
-# 	Output(component_id="map", component_property="figure"),
-# 	[Input(component_id="slider", component_property="value"),])
+def build_bubble_chart(value):
+	if ((value == "bub_c_show_dataset") | (value == "bub_c_hide_dataset")):
+		data = datasets.possible_flooding_coverage
+		fig = px.scatter(
+			data,
+			x = "Year",
+			y = "Approximate Rise Of Sea Level(Inch)",
+			size = "Area(mi²)",
+			color = "Year",
+			title = "Possible Flood Coverage of A 100-Year Flooding"
+		)
+		fig.update_layout(paper_bgcolor = "#97D4DE", plot_bgcolor = "#74AAB3", title_font=dict(size=20))
+	return fig
 
-# def build_line(year):
-# 	data = datasets.possible_flooding_coverage
-# 	fig = px.scatter(
-# 		data,
-# 		x = "Year",
-# 		y = "Approximate Rise Of Sea Level(Inch)",
-# 		size = "Area(mi²)",
-# 		color = "Year",
-# 		title = "Approximate flood coverage of NYC in a 100-Year Flooding"
-# 	)
-# 	fig.update_layout(title_font=dict(size=20))
-# 	return fig
+# Show or hide dataset for bubble chart.
+@app.callback(
+	[Output(component_id="bubble_chart_filter_example", component_property="children"),
+	Output(component_id="bubble_chart_dataset", component_property="children")],
+	Input(component_id="bubble_chart_show_dataset", component_property="value"))
 
+def show_or_hide_bub_c_dataset(option_show_or_hide):
+	if option_show_or_hide == "bub_c_show_dataset":
+		optional_filter = html.Div([
+			html.H6(html.U("""The dataset will change depending on 
+					the variable and the region the user chooses at the top of the chart.""")),
+			html.Table([
+				html.Tr(html.H6(html.B("Examples on how to apply filter on the dataset:"))),
+				html.Tr([
+					html.Td([			
+						html.H6("Apply filter on numbers:"),
+						html.H6(html.Li(["Example 1: Enter ", html.Code("=2013")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code(">=2050")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("<2020")]))
+					]),
+					html.Td([
+						html.H6("Apply filter on strings:"),
+						html.H6(html.Li(["Example 1: Enter ", html.Code("Brooklyn")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code("=Bronx")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("contains Queens")]))
+					], style={"text-decoration": "line-through"})
+				])
+			]),
 
+			# Column Description
+			html.Div([
+				html.H6([
+					html.B("1st Column: "),
+					html.B("Year", style={"color": "#4C6472"}),
+					" - the year where the predicted 100-Year flooding may occur."
+				]),
+				html.H6([
+					html.B("2nd Column: "),
+					html.B("Approximate Rise Of Sea Level(Inch)", style={"color": "#4C6472"}),
+					" - the predicted approximate rise of sea level measured in inches."
+				]),
+				html.H6([
+					html.B("3rd Column: "),
+					html.B("Area(mi²)", style={"color": "#4C6472"}),
+					" - the predicted flood coverage of land area measured in square miles."				
+				])
+			])
+		])
+
+		data = datasets.possible_flooding_coverage
+		dataset = dash_table.DataTable(
+			data=data.to_dict("records"),
+			filter_action="native",
+			columns=[{"name": i, "id": i} for i in (data.columns)],
+			page_size=6,
+			style_header={"background-color": "#56A3B0", "border": "1px solid #133C45", "font-size": "14px"},
+			style_cell={"background-color": "#A9CAD1", "border": "1px solid #133c45", "font-size": "14px"}
+		)		
+		return optional_filter, dataset
+	else:
+		message1 = html.H6("Dataset is hidden.", style={"margin-left": "10px"})
+		message2 = html.H6(["To view the dataset, please click on ", html.U("Show Dataset.")], style={"margin-left": "10px"})
+		return message1, message2
+
+# Download dataset that is used in bubble chart.
+@app.callback(
+	Output(component_id="bubble_chart_download_data", component_property="data"),
+	Input(component_id="bubble_chart_download_option", component_property="value"))
+
+def download_bubble_chart_dataset(bubble_chart_download_option):
+	if bubble_chart_download_option == "flood_data":
+		return dcc.send_data_frame((datasets.possible_flooding_coverage).to_csv, "possible_flooding_coverage.csv")
+"""End of Bubble Chart functions"""
 
 app.layout = html.Div(
 	children = [title, tabs]
