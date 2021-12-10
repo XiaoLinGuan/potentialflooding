@@ -31,7 +31,5 @@ si_population = pd.read_csv("si_population.csv")
 nyc_population = pd.read_csv("nyc_population.csv")
 
 # Bubble Chart
-# elevation_status_map = pd.read_csv("nyc_elevation.csv")
-# elevation_status_map = elevation_status_map.sample(n=100, random_state=1)
-# possible_flooding_coverage = pd.read_csv("100_year_flood_data.csv")
+possible_flooding_coverage = pd.read_csv("100_year_flood_data.csv")
 # print(possible_flooding_coverage)
