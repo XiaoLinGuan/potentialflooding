@@ -5,9 +5,9 @@ from dash import dash_table
 from dash.dash_table.Format import Group
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
+from pandas.core.groupby.generic import DataFrameGroupBy
 import plotly.express as px
 import statsmodels.api as sm
-# import folium
 import datasets
 
 """
@@ -99,26 +99,10 @@ tab1 = html.Div([
 	# https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r00/access/csv/ (Choose ibtracs.NA.list.v04r00.csv)
 	html.H5("😂📉Just testing if copying an emoji directly to my web app will work"),
 
-	# Link to GitHub Source Code Page
-	html.H6(html.A("GitHub Source Code Page", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank"),
-		style={"margin-left": "5px"}),
-
-	html.Hr(style={"border": "1px dashed white"}),
-
-	# Contact Information
-	html.Div([
-		html.H6(html.B("Get in touch"), style={"color": "black"}),
-		html.H6("Feel free to reach out for any improvements that I can work on for this project."),
-		html.Address([
-			"📧",
-			html.A("xiaolinggguan@gmail.com", href="mailto:xiaolinggguan@gmail.com", target="_blank"),
-			html.Br(),
-			"📧", 
-			html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
-		]),
-	], style={"margin-left": "5px", "margin-right": "100px"}),
+	html.Hr(style={"border": "1px dashed white"})
 
 ], id="overview_tab_content", style=overview_content_style)
+# End of Tab1
 
 """
 Tab2
@@ -224,7 +208,7 @@ tab2 = html.Div([
 					The datasets are cleaned and modified for plotting. To read or download 
 					the original datasets, please click on 
 					""", 
-					html.B("Overview"), 
+					html.B("Conclusion"), 
 					""", scroll to the bottom of the page, and click on any links under Data 
 					Sources. Sorry for the inconvenience.
 					"""
@@ -299,7 +283,7 @@ tab2 = html.Div([
 		html.Div(id="scatter_plot_filter_example", style={"margin-left": "10px"}),
 
 		# Scatter Plot Dataset
-		# By default, the dataset is hidden so that user can focus on the graph
+		# By default, the dataset is hidden so that user can focus on the plot
 		html.Div(id="scatter_plot_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 
 		# Dropdown menu for users to download datasets used in scatter plot
@@ -324,7 +308,7 @@ tab2 = html.Div([
 					The datasets are cleaned and modified for plotting. To read or download 
 					the original datasets, please click on 
 					""", 
-					html.B("Overview"), 
+					html.B("Conclusion"), 
 					""", scroll to the bottom of the page, and click on any links under Data 
 					Sources. Sorry for the inconvenience.
 					"""
@@ -334,20 +318,41 @@ tab2 = html.Div([
 	], style={"background-color": "#DDF2D1", "border": "5px solid white", "border-radius": "20px"})
 	# End of Scatter Plot Content
 ])
-# End of Tab2.
+# End of Tab2
 
 """
 Tab3
 Bar Chart and Bubble Chat content
-Bar Chart will be showing the elevation status of NYC
+Bar Chart will be showing the elevation status and population of NYC
 Bubble Chart will be showing the probability of a rare flooding event 
 """
 tab3 = html.Div([
 	# Bar Chart content
 	html.Div([
-		# Bar Chart Description 056A54
+		# Bar Chart Description
 		html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
-		# html.P(),
+		html.P([
+			"""
+			NYC, one of the world's biggest coastal cities with an elevation of 
+			only approximately thirty-three feet or ten meters, has been facing 
+			an increasing amount of stress over storm surge in recent years. In 
+			the following bar chart, although we can see that most of NYC's elevation 
+			points are greater than ten meters and are under the category of "Average." 
+			They are, in fact, below average and often considered at risk of high-tide 
+			flooding if they are near the shoreline. Some might say we can avoid 
+			taking the risk if we don't go to places with a low elevation point, 
+			which is a common misunderstanding. Many people might not realize 
+			that almost half of NYC's population lives in coastal neighborhoods. 
+			As we click on "population" as the focus of the bar chart, we will 
+			see that in each borough, there is a significant number of residents 
+			living in coastal regions. In both Manhattan and Staten Island, more 
+			than half of their population live in coastal neighborhoods. How can 
+			New Yorkers avoid going to the low elevation zone? It's impossible 
+			and given there is a huge part of NYC's population living in coastal 
+			areas, as the sea level rises more quickly than before, more of us 
+			will be at risk of being affected by future flooding.
+			"""
+		], style={"color": "#056A54", "text-align": "justify", "margin-left": "10px", "margin-right": "10px"}),
 
 		html.Hr(style={"border-top": "2px dashed #85CD92", "margin-left": "10px", "margin-right": "10px"}),
 
@@ -397,7 +402,29 @@ tab3 = html.Div([
 				)
 			], id="stacked_bar_chart_option")
 		]),
-		
+
+		html.Br(),
+
+		# Elevation classification.
+		html.Div([
+			html.H6([html.B("Extremely Low: "), 
+				"Elevation point that is below or equal to 3 meters above sea level."]),
+			html.H6([html.B("Very Low: "), 
+				"Elevation point that is between 4 to 7 meters above sea level."]),
+			html.H6([html.B("Low: "), 
+				"Elevation point that is between 8 to 10 meters above sea level."]),
+			html.H6([html.B("Average: "), 
+				"Elevation point that is greater than or equal to 10 meters."])
+		], id="elevation_classificaton"),
+
+		# Population classification.
+		html.Div([
+			html.H6([html.B("Coastal Neighborhood: "), 
+				"Neighborhood that is bordering the shoreline."]),
+			html.H6([html.B("Non-Coastal Neighborhood: "), 
+				"Neighborhood that is not bordering the shoreline, or inland."])
+		], id="population_classification"),
+
 		# Bar Chart
 		dcc.Graph(id="bar_chart"),
 
@@ -409,18 +436,19 @@ tab3 = html.Div([
 			],
 			value="b_c_hide_dataset",
 			inline=True,
-			id="bar_chart_show_dateset",
+			id="bar_chart_show_dataset",
 			label_style={"font-size": "20px", "color": "#056A54"},
 			style={"margin-left": "10px"}
 		),
 
+		# Examples of applying filter on the dataset
 		html.Div(id="bar_chart_filter_example", style={"margin-left": "10px"}),
 
 		# Bar Chart Dataset
-		# By default, the dataset is hidden so that user can focus on the graph
+		# By default, the dataset is hidden so that user can focus on the chart
 		html.Div(id="bar_chart_dataset", style={"margin-left": "10px", "margin-right": "10px"}),
 	
-		# Dropdown menu for users to download datasets used in line graph
+		# Dropdown menu for users to download datasets used in bar chart
 		html.Div([
 			html.H6(html.I(html.B("Download datasets used in scatter plot: ")), style={"margin-left": "10px"}),
 			html.Div([
@@ -433,20 +461,26 @@ tab3 = html.Div([
 						{"label": "manhattan_elevation_status_count.csv", "value": "mh_esc"},
 						{"label": "queens_elevation_status_count.csv", "value": "q_esc"},
 						{"label": "staten_island_elevation_status_count.csv", "value": "si_esc"},
+						{"label": "nyc_coastal_vs_non_coastal.csv", "value": "nyc_p"},
+						{"label": "brooklyn_coastal_vs_non_coastal.csv", "value": "bk_p"},
+						{"label": "bronx_coastal_vs_non_coastal.csv", "value": "bx_p"},
+						{"label": "manhattan_coastal_vs_non_coastal.csv", "value": "mn_p"},
+						{"label": "queens_coastal_vs_non_coastal.csv", "value": "qn_p"},
+						{"label": "staten_island_vs_non_coastal.csv", "value": "si_p"}
 					],
 					placeholder="Pick a dataset",
 					id="bar_chart_download_option",
-					style={"background-color": "#E3EDDD", "border-radius": "10px", "color": "#056A54"}
+					style={"background-color": "#E3F0DD", "border-radius": "10px", "color": "#056A54"}
 				),
 				dcc.Download(id="bar_chart_download_data")
-			],style={"margin-left": "10px", "margin-right": "950px"}),
+			],style={"margin-left": "10px", "margin-right": "900px"}),
 			html.H6(
 				html.I([
 					"""
 					The datasets are cleaned and modified for plotting. To read or download 
 					the original datasets, please click on 
 					""", 
-					html.B("Overview"), 
+					html.B("Conclusion"), 
 					""", scroll to the bottom of the page, and click on any links under Data 
 					Sources. Sorry for the inconvenience.
 					"""
@@ -454,16 +488,52 @@ tab3 = html.Div([
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
 
-	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"})
+	], style={"background-color": "#C1E3C4", "border": "5px solid white", "border-radius": "20px"}),
 	# End of Bar Chat Content
+
+	# Bubble Chart content
+	html.Div([
+		html.H4("")
+	])
 ])
+# End of Tab3
+
+"""
+Tab4 
+Conclusion of project
+Citations links
+Source code links
+"""
+tab4 = html.Div([
+	# Conclusion summary
+	# 7393A1
+
+	# Link to GitHub Source Code Page
+	html.H6(html.A("GitHub Source Code", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank"),
+		style={"margin-left": "5px"}),
+
+	# Contact Information
+	html.Div([
+		html.H6(html.B("Get in touch"), style={"color": "black"}),
+		html.H6("Feel free to reach out for any improvements that I can work on for this project."),
+		html.Address([
+			"📧",
+			html.A("xiaolinggguan@gmail.com", href="mailto:xiaolinggguan@gmail.com", target="_blank"),
+			html.Br(),
+			"📧", 
+			html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
+		]),
+	], style={"margin-left": "5px", "margin-right": "100px"})
+])
+# End of Tab4
 
 # All the tabs
 tabs = html.Div([
 	dcc.Tabs([ 
 			dcc.Tab(tab1, label="Overview", value="tab_1", style=tab_style, selected_style=selected_tab_style),			
 			dcc.Tab(tab2, label="Line Graph and Scatter Plot", value="tab_2", style=tab_style, selected_style=selected_tab_style),
-			dcc.Tab(tab3, label="Bar Chart and Bubble Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style)
+			dcc.Tab(tab3, label="Bar Chart and Bubble Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style),
+			dcc.Tab(tab4, label="Conclusion", value="tab_4", style=tab_style, selected_style=selected_tab_style)
 		],
 		value="tab_1", # Default tab is Overview 
 		id="tabs"
@@ -590,7 +660,7 @@ def show_or_hide_lg_dataset(option_show_or_hide, region):
 		dataset = dash_table.DataTable(
 			data=data.to_dict("records"),
 			filter_action="native",
-			columns=[{"name": i, "id": i,} for i in (data.columns)],
+			columns=[{"name": i, "id": i} for i in (data.columns)],
 			page_size=10,
 			style_header={"background-color": "#AEB7C8", "border": "1px solid #174978", "font-size": "14px"},
 			style_cell={"background-color": "#E4ECF7", "border": "1px solid #174978", "font-size": "14px"}
@@ -693,7 +763,7 @@ def match_legend_color(value):
 	[Input(component_id="scatter_plot_show_dataset", component_property="value"),
 	Input(component_id="scatter_plot_radioitems", component_property="value")])
 
-def shor_or_hide_sp_dataset(option_show_or_hide, region):
+def show_or_hide_sp_dataset(option_show_or_hide, region):
 	if option_show_or_hide == "s_c_show_dataset":
 		if region == "ao_c":
 			data = datasets.atlantic_ocean_cyclones_count
@@ -702,7 +772,7 @@ def shor_or_hide_sp_dataset(option_show_or_hide, region):
 		elif region == "tri_state_c":
 			data = datasets.tri_state_region_and_nyc_count
 		filter_example = html.Div([
-			html.H6(html.U("The dataset will change depending on the region the user chooses at the top of the graph.")),
+			html.H6(html.U("The dataset will change depending on the region the user chooses at the top of the plot.")),
 			html.Table([
 				html.Tr(html.H6(html.B("Examples on how to apply filters on the dataset:"))),
 				html.Tr([
@@ -747,7 +817,7 @@ def shor_or_hide_sp_dataset(option_show_or_hide, region):
 		dataset = dash_table.DataTable(
 			data=data.to_dict("records"),
 			filter_action="native",
-			columns=[{"name": i, "id": i,} for i in (data.columns)],
+			columns=[{"name": i, "id": i} for i in (data.columns)],
 			page_size=10,
 			style_header={"background-color": "#A9BA9D", "border": "1px solid #405A45", "font-size": "14px"},
 			style_cell={"background-color": "#E9EFEA", "border": "1px solid #405A45", "font-size": "14px"}
@@ -775,7 +845,11 @@ def download_line_graph_dataset(scatter_plot_download_option):
 """
 Bar Chart functions
 Including:
-
+	option to modify regular bar chart into a stacked bar chart,
+	build bar chart,
+	show legend descriptions,
+	show or hide bar chart dataset,
+	options to download the dataset
 """
 # Modify the stacked bar chart option.
 @app.callback(
@@ -882,6 +956,231 @@ def build_bar_chart(bar_variable, region, value):
 		)
 		fig.update_layout(paper_bgcolor = "#C1E3C4", plot_bgcolor = "#9BCC9F", title_font=dict(size=20))
 		return fig
+
+# Show legend descriptions.
+@app.callback(
+	[Output(component_id="elevation_classificaton", component_property="style"),
+	Output(component_id="population_classification", component_property="style")],
+	Input(component_id="bar_chart_variable", component_property="value"))
+
+def show_legend_descriptions(variable):
+	if variable == "elevation_status":
+		return {"color": "#3E7A16", "margin-left": "10px"}, {"display": "none"}
+	elif variable == "population":
+		return {"display": "none"}, {"color": "#3E7A16", "margin-left": "10px"}
+
+# Show or hide datasets for the bar chart.
+@app.callback(
+	[Output(component_id="bar_chart_filter_example", component_property="children"),
+	Output(component_id="bar_chart_dataset", component_property="children")],
+	[Input(component_id="bar_chart_show_dataset", component_property="value"),
+	Input(component_id="bar_chart_variable", component_property="value"),
+	Input(component_id="bar_chart_radioitems_region", component_property="value"),
+	Input(component_id="bar_chart_radioitems_stack", component_property="value")])
+
+def show_or_hide_bc_dataset(option_show_or_hide, variable, region, chart):
+	if option_show_or_hide == "b_c_show_dataset":
+
+		# Filter examples.
+		optional_filter = html.Div([
+			html.H6(html.U("""The dataset will change depending on 
+					the variable and the region the user chooses at the top of the chart.""")),
+			html.Table([
+				html.Tr(html.H6(html.B("Examples on how to apply filter on the dataset:"))),
+				html.Tr([
+					html.Td([			
+						html.H6("Apply filter on numbers:"),
+						html.H6(html.Li(["Example 1: Enter ", html.Code("=1230000")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code(">=95709")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("<500000")]))
+					]),
+					html.Td([
+						html.H6("Apply filter on strings:"),
+						html.H6(html.Li(["Example 1: Enter ", html.Code("Brooklyn")])),
+						html.H6(html.Li(["Example 2: Enter ", html.Code("=Bronx")])),
+						html.H6(html.Li(["Example 3: Enter ", html.Code("contains Queens")]))
+					])
+				])
+			])
+		])
+
+		if variable == "elevation_status":	# Elevation Status
+			if region == "nyc_bar":
+				if chart == "stacked_bar_chart":
+					data = datasets.nyc_elevation_status2
+					columns = html.Div([
+						html.H6([
+							html.B("1st Column: "),
+							html.B("Region", style={"color": "#4C6472"}), 
+							" - the five boroughs of NYC."
+						]),
+						html.H6([
+							html.B("2nd Column: "),
+							html.B("Extremely Low", style={"color": "#4C6472"}),
+							""" - the number of elevation points that are 
+							classified into 'Extremely Low' category."""
+						]),
+						html.H6([
+							html.B("3rd Column: "),
+							html.B("Low", style={"color": "#4C6472"}),
+							""" - the number of elevation points that are 
+							classified into 'Low' category."""
+						]),
+						html.H6([
+							html.B("3rd Column: "),
+							html.B("Very Low", style={"color": "#4C6472"}),
+							""" - the number of elevation points that are 
+							classified into 'Very Low' category."""
+						]),
+						html.H6([
+							html.B("5th Column: "),
+							html.B("Average", style={"color": "#4C6472"}),
+							""" - the number of elevation points that are 
+							classified into 'Average' category."""
+						])					
+					])
+				elif chart == "regular_bar_chart":
+					data = datasets.nyc_elevation_status1
+					columns = html.Div([
+						html.H6([
+							html.B("1st Column: "),
+							html.B("Elevation Status", style={"color": "#4C6472"}),
+							""" - the category that allows a geographical point 
+							from NYC being classfied based on their elevations."""
+						]),
+						html.H6([
+							html.B("2nd Column: "),
+							html.B("Count", style={"color": "#4C6472"}),
+							""" - the number of elevation points belong to a 
+							specific elevation status."""
+						])
+					])
+			else:
+				columns = html.Div([
+					html.H6([
+						html.B("1st Column: "),
+						html.B("Elevation Status", style={"color": "#4C6472"}),
+						""" - the category that allows a geographical point 
+						from NYC being classfied based on their elevations."""
+					]),
+					html.H6([
+						html.B("2nd Column: "),
+						html.B("Count", style={"color": "#4C6472"}),
+						" - the number of elevation points belong to a specific elevation status."
+					])
+				])
+				if region == "bk_bar":
+					data = datasets.bk_elevation_status
+				elif region == "bx_bar":
+					data = datasets.bx_elevation_status
+				elif region == "mh_bar":
+					data = datasets.mh_elevation_status
+				elif region == "q_bar":
+					data = datasets.q_elevation_status
+				elif region == "si_bar":
+					data = datasets.si_elevation_status
+			filter_example = html.Div([
+				optional_filter,
+				columns
+			], style={"color": "#056A54","margin-left": "10px", "margin-right": "10px"})
+		elif variable == "population":	# Population
+			if region == "nyc_bar":
+				data = datasets.nyc_population
+				columns = html.Div([
+					html.H6([
+						html.B("1st Column: "),
+						html.B("Region", style={"color": "#4C6472"}),
+						" - the five boroughs of NYC."
+					]),
+					html.H6([
+						html.B("2nd Column: "),
+						html.B("Coastal Neightborhood", style={"color": "#4C6472"}),
+						" - the neighborhoods that are bordering NYC's shoreline and the total population."
+					]),
+					html.H6([
+						html.B("3rd Column: "),
+						html.B("Non-Coastal Neighborhood", style={"color": "#4C6472"}),
+						" - the neighborhoods that are not bordering NYC's shoreline and the total population."
+					])
+				])
+			else:
+				columns = html.Div([
+					html.H6([
+						html.B("1st Column: "),
+						html.B("Neighborhood Type", style={"color": "#4C6472"}),
+						" - the neighborhoods are classified into two types, either coastal or non-coastal."
+					]),
+					html.H6([
+						html.B("2nd Column: "),
+						html.B("Population", style={"color": "#4C6472"}),
+						" - the population of the specific type of neighborhood in a borough."
+					])		
+				])
+				if region == "bk_bar":
+					data = datasets.bk_population	
+					column1 = "Neighborhood Type"
+					definition1 = ""
+				elif region == "bx_bar":
+					data = datasets.bx_population
+					column1 = "Neighborhood Type"
+				elif region == "mh_bar":
+					data = datasets.mn_population
+					column1 = "Neighborhood Type"
+				elif region == "q_bar":
+					data = datasets.qn_population
+					column1 = "Neighborhood Type"
+				elif region == "si_bar":
+					data = datasets.si_population
+					column1 = "Neighborhood Type"
+			filter_example = html.Div([
+				optional_filter,
+				columns
+			], style={"color": "#056A54","margin-left": "10px", "margin-right": "10px"})
+		dataset = dash_table.DataTable(
+			data=data.to_dict("records"),
+			filter_action="native",
+			columns=[{"name": i, "id": i} for i in (data.columns)],
+			page_size=6,
+			style_header={"background-color": "#76AD87", "border": "1px solid #405A45", "font-size": "14px"},
+			style_cell={"background-color": "#C1DBC4", "border": "1px solid #405A45", "font-size": "14px"}
+		)
+		return filter_example, dataset
+	else:
+		message1 = html.H6("Dataset is hidden.", style={"margin-left": "10px"})
+		message2 = html.H6(["To view the dataset, please click on ", html.U("Show Dataset.")], style={"margin-left": "10px"})
+		return message1, message2
+# Download datasets that are used in bar chart.
+@app.callback(
+	Output(component_id="bar_chart_download_data", component_property="data"),
+	Input(component_id="bar_chart_download_option", component_property="value"))
+
+def download_bar_chart_dataset(bar_chart_download_option):
+	if bar_chart_download_option == "nyc_esc1":
+		return dcc.send_data_frame((datasets.nyc_elevation_status1).to_csv, "nyc_elevation_status.csv")
+	elif bar_chart_download_option == "nyc_esc2":
+		return dcc.send_data_frame((datasets.nyc_elevation_status2).to_csv, "nyc_elevation_status_stacked_bar_chart.csv")
+	elif bar_chart_download_option == "bk_esc":
+		return dcc.send_data_frame((datasets.bk_elevation_status).to_csv, "brooklyn_elevation_status_count.csv")
+	elif bar_chart_download_option == "bx_esc":
+		return dcc.send_data_frame((datasets.bx_elevation_status).to_csv, "bronx_elevation_status.csv")
+	elif bar_chart_download_option == "mh_esc":
+		return dcc.send_data_frame((datasets.mh_elevation_status).to_csv, "manhattan_elevation_status.csv")
+	elif bar_chart_download_option == "q_esc":
+		return dcc.send_data_frame((datasets.q_elevation_status).to_csv, "queens_elevation_status.csv")
+	elif bar_chart_download_option == "si_esc":
+		return dcc.send_data_frame((datasets.si_elevation_status).to_csv, "staten_island_elevation_status.csv")
+	elif bar_chart_download_option == "nyc_p":
+		return dcc.send_data_frame((datasets.nyc_population).to_csv, "nyc_coastal_vs_non_coastal.csv")
+	elif bar_chart_download_option == "bk_p":
+		return dcc.send_data_frame((datasets.bk_population).to_csv, "brooklyn_coastal_vs_non_coastal.csv")
+	elif bar_chart_download_option == "bx_p":
+		return dcc.send_data_frame((datasets.bx_population).to_csv, "bronx_coastal_vs_non_coastal.csv")
+	elif bar_chart_download_option == "mn_p":
+		return dcc.send_data_frame((datasets.mn_population).to_csv, "manhattan_coastal_vs_non_coastal.csv")
+	elif bar_chart_download_option == "qn_p":
+		return dcc.send_data_frame((datasets.qn_population).to_csv, "queens_coastal_vs_non_coastal.csv")
+	elif bar_chart_download_option == "si_p":
+		return dcc.send_data_frame((datasets.si_population).to_csv, "si_population_vs_non_coastal.csv")
 
 # # Show or hide datasets for the bar chart.
 # @app.callback(
