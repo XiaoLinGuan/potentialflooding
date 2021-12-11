@@ -7,10 +7,26 @@
 
 * Line Graph
   * Sea Level Trend
+   * User will be able to view the dataset and graph by choosing the following three regions
     * Global Scale
+    * East Coast
+    * NYC  
+  
+Example Dataset preview:   
+Year | Relative Sea-level rise(inch) | Relative Sea-level rise(cm)
+-----|-------------------------------|----------------------------
+2000 |               0               |              0
+2010 |               3               |              7            
+2020 |               7               |             15
+**This is not the actual dataset**
+
+
 * Scatter Plot
-  * 
   * Tropical Cyclones Pattern
+   * User can choose any one of the following three regions:
+    * Atlantic Ocean(tropical cyclones formed on the Atlantic Ocean)
+    * East Coast(tropical cyclones made landfall on the East Coast)
+    * NYC(tropical cyclones that had impacted or made landfall at tri-state region, including NYC)
 * Bar Chart
   * Elevation Status
   * Population Distribution
