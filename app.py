@@ -54,14 +54,6 @@ sp_data_download_button_style = {
 image_filename1 = "nyc_flood.png"
 encoded_image1 = base64.b64encode(open(image_filename1, "rb").read())
 
-# Hurricane Sandy Flooding Image
-image_filename2 = "sandy_flood.png"
-encoded_image2 = base64.b64encode(open(image_filename2, "rb").read())
-
-# Hurricane Ida Flooding Image
-image_filename3 = "ida_flood.png"
-encoded_image3 = base64.b64encode(open(image_filename3, "rb").read())
-
 """
 Title of the dashboard
 """
@@ -754,30 +746,6 @@ tab4 = html.Div([
 					g&ust=1639247495189000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPCenPvu2\
 					fQCFQAAAAAdAAAAABAK", target="_blank"),
 			
-			html.Br(),
-
-			"‣ ",
-			html.A("https://www.google.com/url?sa=i&url=https%3A%2F%2Fnews.climate.\
-				columbia.edu%2F2015%2F05%2F20%2Fwas-hurricane-sandy-the-100-year-event\
-				-2%2F&psig=AOvVaw27LzcmyPpoMXsa0N_pW3Cr&ust=1639251668585000&source=\
-				images&cd=vfe&ved=0CAsQjRxqFwoTCLD95b3-2fQCFQAAAAAdAAAAABAD", 
-				href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fnews.\
-					climate.columbia.edu%2F2015%2F05%2F20%2Fwas-hurricane-sandy-the-100-ye\
-					ar-event-2%2F&psig=AOvVaw27LzcmyPpoMXsa0N_pW3Cr&ust=1639251668585000&s\
-					ource=images&cd=vfe&ved=0CAsQjRxqFwoTCLD95b3-2fQCFQAAAAAdAAAAABAD", target="_blank"),
-
-			html.Br(),
-
-			"‣ ",
-			html.A("https://www.google.com/url?sa=i&url=https%3A%2F%2Fgothamist.com\
-				%2Fnews%2Fwhy-nyc-was-so-unprepared-for-idas-flash-flooding&psig=AOvV\
-				aw15HjqnUEzoyEEqnR8OdGRc&ust=1639251441989000&source=images&cd=vfe&ved\
-				=0CAsQjRxqFwoTCNj699D92fQCFQAAAAAdAAAAABAD",
-				href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fgothamist.com%2\
-					Fnews%2Fwhy-nyc-was-so-unprepared-for-idas-flash-flooding&psig=AOvVaw\
-					15HjqnUEzoyEEqnR8OdGRc&ust=1639251441989000&source=images&cd=vfe&ved=\
-					0CAsQjRxqFwoTCNj699D92fQCFQAAAAAdAAAAABAD", target="_blank"),
-
 			html.Br(),
 
 			"‣ ",		
