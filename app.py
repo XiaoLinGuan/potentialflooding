@@ -450,7 +450,7 @@ tab2 = html.Div([
 					The datasets are cleaned and modified for plotting. To read or download 
 					the original datasets, please click on 
 					""", 
-					html.B("Citation"), 
+					html.B("Citations"), 
 					". Sorry for the inconvenience."
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
@@ -621,7 +621,7 @@ tab3 = html.Div([
 					The datasets are cleaned and modified for plotting. To read or download 
 					the original datasets, please click on 
 					""", 
-					html.B("Citation"), 
+					html.B("Citations"), 
 					". Sorry for the inconvenience."
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
@@ -717,7 +717,7 @@ tab3 = html.Div([
 					The datasets are cleaned and modified for plotting. To read or download 
 					the original datasets, please click on 
 					""", 
-					html.B("Citation"), 
+					html.B("Citations"), 
 					". Sorry for the inconvenience."
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
