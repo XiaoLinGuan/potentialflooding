@@ -6,7 +6,9 @@ from dash.dash_table.Format import Group
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from pandas.core.groupby.generic import DataFrameGroupBy
+from pandas.io.formats import style
 import plotly.express as px
+import base64
 import statsmodels.api as sm
 import datasets
 
@@ -48,6 +50,18 @@ sp_data_download_button_style = {
 	"border-Radius": "15px"
 }
 
+# Front Image
+image_filename1 = "nyc_flood.png"
+encoded_image1 = base64.b64encode(open(image_filename1, "rb").read())
+
+# Hurricane Sandy Flooding Image
+image_filename2 = "sandy_flood.png"
+encoded_image2 = base64.b64encode(open(image_filename2, "rb").read())
+
+# Hurricane Ida Flooding Image
+image_filename3 = "ida_flood.png"
+encoded_image3 = base64.b64encode(open(image_filename3, "rb").read())
+
 """
 Title of the dashboard
 """
@@ -71,35 +85,165 @@ Introduction content
 Descriprtion of the web app and data sources
 """
 tab1 = html.Div([
-	html.H4("CSCI39542 Intro to Data Science Project"),
-	html.H3(""),
+	html.Br(),
+	# Front Image
+	html.P(
+		html.Img(src="data:image/png;base64,{}".format(encoded_image1.decode()), 
+			width="70%", height="70%", style={"border": "2px dashed #174978", "border-radius": "15px"}),
+			style={"text-align": "center"}),
 
-	# Image link of Sandy
-	# Image link of Ida
+	# Introduction to the project
+	html.Div([
+		html.H3("Coastal Flooding"),
+		html.P(
+			"""
+			Sea level and flooding are two phrases that are inseparable from 
+			each other. When we think of sea level, flooding is always the 
+			primary concern that everybody has. Not only does flooding bring 
+			damage to our buildings and drowning people, but it also leaves 
+			us a traumatic experience. As the sea level continues to rise 
+			faster than in the past, NYC is suffering more and more from 
+			coastal flooding. Both high tide flooding and storm surge are 
+			becoming more crucial to New Yorkers that live near the shoreline. 
+			However, not many people realize how significant the impact is 
+			with just a few centimeters rise of sea level. Because the ocean 
+			covers almost 70% of the Earth's surface, people would not notice 
+			whether or not the water level has risen until they see the damage 
+			of flooding. With only a 1 cm rise in sea level, tropical cyclones 
+			can push storm surge much farther inland, impacting a broader 
+			residential area. And given that the ocean temperature is getting 
+			warmer each year, it allows more tropical cyclones to form in the 
+			Atlantic Ocean. Thus, increasing the likelihood of storm surge in 
+			NYC. What makes it worse is that NYC has a mean elevation of only 
+			10 meters, and with almost half the population living in coastal 
+			neighborhoods, the impact of flooding will be tremendous.
+			""", 
+			style={"text-indent": "50px"}),
+		html.P(
+			"""
+			In this website, we will be exploring how the acceleration of 
+			sea-level rise will increase the chance of coastal flooding. With 
+			the dataset of predictive sea-level rise and the record of all 
+			the tropical cyclones developed on the Atlantic Ocean, we will 
+			identify the overall trend from both datasets. Even though I was 
+			planning to make a 3D surface plot for NYC, I decided not to do 
+			it due to the sensitive information involved with the elevation 
+			points. If I make a 3D model of NYC's elevation, and because this 
+			website is open to the public, some people might use the model to 
+			plan for crimes or even terrorist acts. To avoid getting involved 
+			with these cases, instead of creating a 3D model, I classified the 
+			elevation points according to their measurement in meters and their 
+			location corresponding to the five boroughs. And we will see the 
+			elevation status of each borough along with the population dataset 
+			that allows us to compare their coastal neighborhoods to non-coastal 
+			neighborhoods. Initially, I also planned to make a choropleth map 
+			showing potential flooding progress as sea-level rises. However, 
+			many factors also lead to flooding in one area and not the other, 
+			such as steeper landscape, blocked drainage pipes. And I wasn't sure 
+			which factor plays a more critical role in the case of flooding, 
+			and that influenced how I would come up with a predictive model. 
+			Therefore, I followed the Federal Emergency Management Agency(FEMA)'s 
+			model for plotting the possible flood coverage of NYC in a 100-Year 
+			Flooding scenario to showcase the potential flooding area with sea 
+			level as the sole independent variable.
+			""", 
+			style={"text-indent": "50px"})
+	], style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"}),
+
+	html.Hr(style={"border-top": "2px dashed white"}),
+
+	html.H4("Brief Introductions to each visualization and the datasets involved:",
+		style={"margin-left": "10px"}),
+
+	# Introduction to Line Graph and the datasets involved
+	html.H5("Line Graph", style={"color": "#174978", "margin-left": "10px"}),
+	html.P(
+		"""
+		From the dataset of predictive sea-level rise, I chose "1.0 HIGH" 
+		scenario for plotting the line graph. Because according to the 
+		database, 1.0 HIGH captures 83% of the predictive model data. And 
+		by categorizing the data according to the columns: site, latitude, 
+		and longitude, we would be able to separate the data according to 
+		three regions, Global, East Coast, and NYC. We would have three new 
+		data frames that each one will contain information about the predictive 
+		sea-level rise measured in inches from 2000 to 2200. I also added a 
+		new column to each data frame that converts the measurement in inches 
+		to centimeters.
+		By plotting the data onto a line graph, we would see a clear trend in 
+		the relative rise of sea level. And we could compare the differences 
+		of sea-level rise between a more precise location to a broader, more 
+		general area, such as comparing NYC to the Global Scale.		
+		""", 
+		style={"color": "#174978", "text-indent": "50px", "text-align": "justify", 
+		"margin-left": "10px", "margin-right": "10px"}),
 	
-	# Brief description of Line Graph
-	# and explain how the data is obtained and processed
-	html.H5("Line Graph", style={"color": "#174978", "margin-left": "5px"}),
+	# Introduction to Scatter Plot and the datasets involved
+	html.H5("Scatter Plot", style={"color": "#405A45", "margin-left": "10px"}),
+	html.P(
+		"""
+		In the scatter plot, we will be plotting the number of tropical cyclones 
+		according to their level of intensity and the year they are recorded. In 
+		the datasets used in the scatter plots, all tropical cyclones will be 
+		classified under three categories: HU, TS, and TD. HU means that a tropical 
+		cyclone is at hurricane level, TS implies a tropical storm, and TD means it 
+		is at the tropical depression level. To further isolate the data, I applied 
+		conditional statements on the landfall status column to pick out the ones 
+		that had made landfall on the East Coast. And the ones that had made landfall 
+		or impacted the tri-state and NYC area are manually copied from NYC Weather 
+		Archived. Therefore we would be able to see whether or not more tropical 
+		cyclones are developing on the Atlantic Ocean and whether or not there is 
+		an overall trend of more of them making landfall on the East Coast and NYC.
+		""", 
+		style={"color": "#405A45", "text-indent": "50px", "text-align": "justify", 
+		"margin-left": "10px", "margin-right": "10px"}),
 
-	# Brief description of Scatter Plot
-	# and explain how the data is obtained and processed
-	html.H5("Scatter Plot", style={"color": "#405A45", "margin-left": "5px"}),
+	# Introduction to Bar Chart and the datasets involved
+	html.H5("Bar Chart", style={"color": "#056A54", "margin-left": "10px"}),
+	html.P(
+		"""
+		In the bar chart, we can choose which variable we want to focus 
+		on the chart. One is NYC elevation status, and the other is 
+		population distribution. In the dataset that I used for plotting 
+		the elevation status, I added a new column that converts the 
+		elevation measured in feet to meters. And based on the low elevation 
+		coastal zone map produced by Columbia University, I classified each 
+		elevation point according to their measurement in meters. Anything 
+		below three meters is "Extremely Low," anything between four to seven 
+		meters is "Very Low," and anything between eight meters to ten meters 
+		is "Low." Elevation points greater than ten meters would be grouped 
+		under "Average." And by applying approximate latitude and longitude 
+		conditional statements to the dataset, I separated the points based 
+		on their location into five boroughs. And we can see an approximate 
+		count of elevation points under each elevation status in each borough.
 
-	# Brief description of Choropleth Map
-	# and explain how the data is obtained and processed
-	html.H5("Choropleth Map", style={"color": "", "margin-left": "5px"}),
+		To clean the population distribution data, I first had to download 
+		the dataset "population by neighborhood tabulation areas." Then, 
+		based on the neighborhood tabulation map found on NYC.gov, I grouped 
+		the neighborhoods according to their relative locations on the map. 
+		If a neighborhood is connected to the shoreline, it's a coastal 
+		neighborhood; otherwise, it's a non-coastal neighborhood. After 
+		grouping them according to the neighborhood type, I grouped them 
+		again based on their corresponding boroughs. And we would be able 
+		to compare the population of coastal neighborhoods to non-coastal 
+		neighborhoods in each borough.
+		""",
+		style={"color": "#056A54", "text-indent": "50px", "text-align": "justify", 
+		"margin-left": "10px", "margin-right": "10px"}),
 
-	# Brief description of Bar Chart
-	# and explain how the data is obtained and processed
-	html.H5("Bar Chart", style={"color": "", "margin-left": "5px"}),
-
-	# Data sources
-	html.H5("Original Data Sources:", style={"margin-left": "5px"}),
-	# html.H6(html.Ul(html.A(html.H6("sea level rise", style={"color": "purple"}), href="https://dash.plotly.com/dash-html-components/img", target="_blank"),)),
-	# https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r00/access/csv/ (Choose ibtracs.NA.list.v04r00.csv)
-	html.H5("😂📉Just testing if copying an emoji directly to my web app will work"),
-
-	html.Hr(style={"border": "1px dashed white"})
+	# Introduction to Bubble Chart and the dataset involved
+	html.H5("Bubble Chart", style={"color": "#053845", "margin-left": "10px"}),
+	html.P(
+		"""
+		The bubble chart involves plotting the data from the 100-Year 
+		Flooding Scenario model produced by FEMA. One column represents 
+		the year. Another column represents the approximate prediction 
+		of sea-level rise in inches. And the last column represents the 
+		land area from NYC that will be covered by flooding if 100-Year 
+		flooding occurs. By plotting the data onto the chart, we would 
+		see how sea-level rise is related to flood coverage.
+		""",
+		style={"color": "#053845", "text-indent": "50px", "text-align": "justify", 
+		"margin-left": "10px", "margin-right": "10px"}),
 
 ], id="overview_tab_content", style=overview_content_style)
 # End of Tab1
@@ -209,9 +353,7 @@ tab2 = html.Div([
 					the original datasets, please click on 
 					""", 
 					html.B("Conclusion"), 
-					""", scroll to the bottom of the page, and click on any links under Data 
-					Sources. Sorry for the inconvenience.
-					"""
+					", and click on any links under Citations. Sorry for the inconvenience."
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
@@ -309,9 +451,7 @@ tab2 = html.Div([
 					the original datasets, please click on 
 					""", 
 					html.B("Conclusion"), 
-					""", scroll to the bottom of the page, and click on any links under Data 
-					Sources. Sorry for the inconvenience.
-					"""
+					", and click on any links under Citations. Sorry for the inconvenience."
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
@@ -331,7 +471,7 @@ tab3 = html.Div([
 	# Bar Chart content
 	html.Div([
 		# Bar Chart Description
-		html.H4("NYC Elevation", style={"color": "#056A54", "margin-left": "10px"}),
+		html.H4("NYC Elevation & Population Distribution", style={"color": "#056A54", "margin-left": "10px"}),
 		html.P([
 			"""
 			NYC, one of the world's biggest coastal cities with an elevation of 
@@ -482,9 +622,7 @@ tab3 = html.Div([
 					the original datasets, please click on 
 					""", 
 					html.B("Conclusion"), 
-					""", scroll to the bottom of the page, and click on any links under Data 
-					Sources. Sorry for the inconvenience.
-					"""
+					", and click on any links under Citations. Sorry for the inconvenience."
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
@@ -580,9 +718,7 @@ tab3 = html.Div([
 					the original datasets, please click on 
 					""", 
 					html.B("Conclusion"), 
-					""", scroll to the bottom of the page, and click on any links under Data 
-					Sources. Sorry for the inconvenience.
-					"""
+					", and click on any links under Citations. Sorry for the inconvenience."
 				]),
 			style={"text-align": "justify", "margin-left": "10px", "margin-right": "10px"})
 		])
@@ -592,31 +728,142 @@ tab3 = html.Div([
 
 """
 Tab4 
-Conclusion of project
 Citations links
 Source code links
 """
 tab4 = html.Div([
-	# Conclusion summary
-	# 7393A1
-
 	# Link to GitHub Source Code Page
-	html.H6(html.A("GitHub Source Code", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank"),
-		style={"margin-left": "5px"}),
+	html.Div([
+		html.H6([html.B("All source codes including datasets and images are available on: "), 
+			html.A("GitHub", href="https://github.com/XiaoLinGuan/potentialflooding", target="_blank")],
+			style={"margin-left": "10px"}),
+	], style={"border-left": "12px solid #088F8F", "border-radius": "20px"}),
+
+	html.Br(),	
+
+	# Data & background info citations.
+	html.Div([
+		html.Div([
+			html.H6([html.B("Citations"), "(include images and background information):"]),
+			"‣ ",
+			html.A("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flickr.com\
+				%2Fphotos%2Fchrisgold%2F48064453861&psig=AOvVaw1ZsWjYZNrnnY9hZzCkxr7g&ust\
+				=1639247495189000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPCenPvu2fQCFQAAAAAdAAAAABAK",
+				href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flickr.com\
+					%2Fphotos%2Fchrisgold%2F48064453861&psig=AOvVaw1ZsWjYZNrnnY9hZzCkxr7\
+					g&ust=1639247495189000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCPCenPvu2\
+					fQCFQAAAAAdAAAAABAK", target="_blank"),
+			
+			html.Br(),
+
+			"‣ ",
+			html.A("https://www.google.com/url?sa=i&url=https%3A%2F%2Fnews.climate.\
+				columbia.edu%2F2015%2F05%2F20%2Fwas-hurricane-sandy-the-100-year-event\
+				-2%2F&psig=AOvVaw27LzcmyPpoMXsa0N_pW3Cr&ust=1639251668585000&source=\
+				images&cd=vfe&ved=0CAsQjRxqFwoTCLD95b3-2fQCFQAAAAAdAAAAABAD", 
+				href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fnews.\
+					climate.columbia.edu%2F2015%2F05%2F20%2Fwas-hurricane-sandy-the-100-ye\
+					ar-event-2%2F&psig=AOvVaw27LzcmyPpoMXsa0N_pW3Cr&ust=1639251668585000&s\
+					ource=images&cd=vfe&ved=0CAsQjRxqFwoTCLD95b3-2fQCFQAAAAAdAAAAABAD", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://www.google.com/url?sa=i&url=https%3A%2F%2Fgothamist.com\
+				%2Fnews%2Fwhy-nyc-was-so-unprepared-for-idas-flash-flooding&psig=AOvV\
+				aw15HjqnUEzoyEEqnR8OdGRc&ust=1639251441989000&source=images&cd=vfe&ved\
+				=0CAsQjRxqFwoTCNj699D92fQCFQAAAAAdAAAAABAD",
+				href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fgothamist.com%2\
+					Fnews%2Fwhy-nyc-was-so-unprepared-for-idas-flash-flooding&psig=AOvVaw\
+					15HjqnUEzoyEEqnR8OdGRc&ust=1639251441989000&source=images&cd=vfe&ved=\
+					0CAsQjRxqFwoTCNj699D92fQCFQAAAAAdAAAAABAD", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",		
+			html.A("https://tidesandcurrents.noaa.gov/sltrends/sltrends.html", 
+				href="https://tidesandcurrents.noaa.gov/sltrends/sltrends.html", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://www.google.com/maps/d/viewer?msa=0&ll=36.2\
+				9565239657705%2C-71.44400484402645&spn=23.846642%2C46.538086&mid=1XZHeCFYaw0OY3YbHUwc28OJh9rk&z=5",
+				href="https://www.google.com/maps/d/viewer?msa=0&ll=36.2\
+					9565239657705%2C-71.44400484402645&spn=23.846642%2C46.538086&mid=1XZHeCFYaw0OY3YbHUwc28OJh9rk&z=5", 
+				target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://www.ncei.noaa.gov/data/international-best-\
+				track-archive-for-climate-stewardship-ibtracs/v04r00/access/csv/", 
+				href="https://www.ncei.noaa.gov/data/international-best-\
+					track-archive-for-climate-stewardship-ibtracs/v04r00/access/csv/", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://thestarryeye.typepad.com/weather/2012/10/\
+				hurricanes-tropical-storms-that-have-impacted-new-york-city-1979-2011.html", 
+				href="https://thestarryeye.typepad.com/weather/2012/10/\
+					hurricanes-tropical-storms-that-have-impacted-new-york-city-1979-2011.html", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://catalog.data.gov/dataset/elevation-points", 
+				href="https://catalog.data.gov/dataset/elevation-points", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://en.wikipedia.org/wiki/Geography_of_New_York_City#\
+			/media/File:Urban-Rural_Population_and_Land_Area_Estimates,_v2,\
+				_2010\_Greater_NYC,_U.S._(13873743475).jpg", 
+				href="https://en.wikipedia.org/wiki/Geography_of_New_York_City#\
+					/media/File:Urban-Rural_Population_and_Land_Area_Estimates,_v2,\
+					_2010_Greater_NYC,_U.S._(13873743475).jpg", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://www1.nyc.gov/assets/planning/download/pdf/planning-level/nyc-population/census2010/ntas.pdf", 
+				href="https://www1.nyc.gov/assets/planning/download/pdf/planning-level/nyc-population/census2010/ntas.pdf", target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://data.cityofnewyork.us/City-Government/New-York-City-Population-By-Neighborhood-Tabulatio/swpk-hqdp",
+				href="https://data.cityofnewyork.us/City-Government/New-York-City-Population-By-Neighborhood-Tabulatio/swpk-hqdp",
+				target="_blank"),
+
+			html.Br(),
+
+			"‣ ",
+			html.A("https://www.businessinsider.com/new-york-city-flood-map-2020-2050-2015-2", 
+				href="https://www.businessinsider.com/new-york-city-flood-map-2020-2050-2015-2", target="_blank")
+		], style={"margin-left": "10px"})
+	], style={"border-left": "12px solid #088F8F", "border-radius": "10px"}),
+
+	html.Br(),
 
 	# Contact Information
 	html.Div([
-		html.H6(html.B("Get in touch"), style={"color": "black"}),
-		html.H6("Feel free to reach out for any improvements that I can work on for this project."),
+		html.H6(html.B("Get in touch"), style={"color": "black", "margin-left": "10px"}),
+		html.H6("Feel free to reach out for any improvements that I can work on for this project.",
+			style={"margin-left": "10px"}),
 		html.Address([
-			"📧",
+			"📧 ",
 			html.A("xiaolinggguan@gmail.com", href="mailto:xiaolinggguan@gmail.com", target="_blank"),
 			html.Br(),
-			"📧", 
+			"📧 ", 
 			html.A("xiaolin.guan72@myhunter.cuny.edu", href="mailto:xiaolin.guan72@myhunter.cuny.edu", target="_blank")
-		]),
-	], style={"margin-left": "5px", "margin-right": "100px"})
-])
+		], style={"margin-left": "10px"}),
+	], style={"border-left": "12px solid #03895A", "border-right": "12px solid #03895A",
+			"border-top": "1px solid #03895A", "border-bottom": "1px solid #03895A", 
+			"margin-right": "500px", "border-radius": "10px"})
+], style={"background-color": "#CBF2E7", "border": "5px solid white", "border-radius": "20px"})
 # End of Tab4
 
 # All the tabs
@@ -625,7 +872,7 @@ tabs = html.Div([
 			dcc.Tab(tab1, label="Introduction", value="tab_1", style=tab_style, selected_style=selected_tab_style),			
 			dcc.Tab(tab2, label="Line Graph and Scatter Plot", value="tab_2", style=tab_style, selected_style=selected_tab_style),
 			dcc.Tab(tab3, label="Bar Chart and Bubble Chart", value="tab_3", style=tab_style,  selected_style=selected_tab_style),
-			dcc.Tab(tab4, label="Conclusion", value="tab_4", style=tab_style, selected_style=selected_tab_style)
+			dcc.Tab(tab4, label="Citations", value="tab_4", style=tab_style, selected_style=selected_tab_style)
 		],
 		value="tab_1", # Default tab is Overview 
 		id="tabs"
