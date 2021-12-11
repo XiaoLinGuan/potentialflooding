@@ -7,7 +7,7 @@
 
 * Line Graph
   * Sea Level Trend
-   * User will be able to view the dataset and graph by choosing the following three regions
+  * User will be able to view the dataset and graph by choosing the following three regions
     * Global Scale
     * East Coast
     * NYC  
@@ -18,6 +18,7 @@ Year | Relative Sea-level rise(inch) | Relative Sea-level rise(cm)
 2000 |               0               |              0
 2010 |               3               |              7            
 2020 |               7               |             15
+  
 **This is not the actual dataset**
 
 
