@@ -40,16 +40,6 @@ overview_content_style = {
 	"border-radius": "20px",
 }
 
-lg_data_download_button_style = {
-	"border": "1px solid #174978", 
-	"border-Radius": "15px"
-}
-
-sp_data_download_button_style = {
-	"border": "1px solid #405A45",
-	"border-Radius": "15px"
-}
-
 # Front Image
 image_filename1 = "nyc_flood.png"
 encoded_image1 = base64.b64encode(open(image_filename1, "rb").read())
